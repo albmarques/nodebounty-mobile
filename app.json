@@ -1,14 +1,13 @@
 {
   "expo": {
-    "name": "nodebounty-app",
-    "slug": "nodebounty-app",
+    "name": "pi---nodebounty",
+    "slug": "snack-77515834-0b23-4c15-b411-937a3955abeb",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
