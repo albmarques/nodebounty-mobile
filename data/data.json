@@ -1,0 +1,35 @@
+{
+    "idConta": "a2ebe01d-e3ed-4d84-a6bd-6a1aa470b066",
+    "cliente": {
+        "idCliente": "74c95032-0482-4963-81a6-47793eaf9c94",
+        "nome": "Matheus Porto",
+        "endereco": "Rua Ali Perto",
+        "cep": "01234-560",
+        "numero": 11,
+        "rg": "12.345.678-9",
+        "cpf": "123.456.789-10",
+        "dataNascimento": "2003-03-03",
+        "telefone": "+55 11 99999-9999",
+        "email": "matheus@gmail.com",
+        "senha": "$2a$10$iWnhFKYyMWLrUXiXxNsS/O.AAs.H3jGSpV0BmT95kDvvT433qxHD6",
+        "enabled": true,
+        "accountNonExpired": true,
+        "credentialsNonExpired": true,
+        "authorities": [
+            {
+                "authority": "ROLE_USER"
+            }
+        ],
+        "password": "$2a$10$iWnhFKYyMWLrUXiXxNsS/O.AAs.H3jGSpV0BmT95kDvvT433qxHD6",
+        "username": "matheus@gmail.com",
+        "accountNonLocked": true
+    },
+    "plano": {
+        "idPlano": "Beauty",
+        "porcentagemCashback": 5.0,
+        "parcerias": "MAC, MakeB, Vult"
+    },
+    "saldoConta": 300.0,
+    "cashbackConta": 0.0,
+    "numeroConta": "42176224741140218036"
+}
