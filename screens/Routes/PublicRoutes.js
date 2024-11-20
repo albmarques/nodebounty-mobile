@@ -5,12 +5,12 @@ import HomeScreen from '../public/HomeScreen.jsx';
 import LoginScreen from '../public/LoginScreen.jsx';
 import SignUp from '../public/Sign-up.jsx';
 
-const Drawer = createDrawerNavigator();
+const Stack = createDrawerNavigator();
 
 // Public Routes
 export default function PublicRoutes() {
     return (
-        <Drawer.Navigator
+        <Stack.Navigator
             initialRouteName="Home"
             screenOptions={{
                 drawerStyle: {
@@ -31,9 +31,9 @@ export default function PublicRoutes() {
                 },
             }}
         >
-            <Drawer.Screen name="Home" component={HomeScreen} />
-            <Drawer.Screen name="Login" component={LoginScreen} />
-            <Drawer.Screen name="Cadastrar" component={SignUp} />
-        </Drawer.Navigator>
+            <Stack.Screen name="Home" component={HomeScreen} />
+            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="Cadastrar" component={SignUp} />
+        </Stack.Navigator>
     );
 }
