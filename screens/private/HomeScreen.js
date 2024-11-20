@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState, useCallback, useEffect } from 'react'
 import { View, Text, SafeAreaView, StyleSheet, ScrollView, StatusBar } from 'react-native';
 import { Icon } from '@rneui/themed';
 
@@ -8,6 +9,34 @@ import VisibilityBtn from '../../components/VisibityBtn';
 const conta = data;
 
 export default function HomeScreen() {
+
+  const loadAccountData = useCallback(async () => {
+    try {
+      setIsLoading(true)
+      const { data } = await api.get('/conta')
+      setDadosConta(data)
+      setIsLoading(false)
+    } catch (error) {
+      const isAppError = error instanceof AppError
+      // Verificando se o erro ocorreu pois o usuário não possui conta
+      // Por não ter escolhido ainda na tela de planos.
+      if (
+        isAppError &&
+        error.message ===
+          'Cliente não possui nenhuma conta associada no sistema'
+      ) {
+        navigate('/planos')
+      } else {
+        alert('Um erro ocorreu')
+        console.log(error)
+      }
+    }
+  }, [])
+
+  // Chamando função para carregar os dados quando a página abrir
+  useEffect(() => {
+    loadAccountData()
+  }, [loadAccountData])
 
     const [visible, setVisible] = React.useState(false);
 
@@ -50,7 +79,7 @@ export default function HomeScreen() {
                         <View>
                             <View style={styles.saldoContainer.saldo.containerValor}>
                                 <Text style={styles.saldoContainer.saldo.containerValor.R$}>R$</Text>
-                                <Text style={styles.saldoContainer.saldo.containerValor.valor}>{visible ? formatarNumero(conta.saldoConta) : '••••'}</Text>
+                                <Text style={styles.saldoContainer.saldo.containerValor.valor}>{visible ? formatarNumero(10) : '••••'}</Text>
                             </View>
                         </View>
                         <View>

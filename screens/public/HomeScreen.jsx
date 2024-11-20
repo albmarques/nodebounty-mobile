@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Image, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { Dimensions } from 'react-native';
+import { darkTheme } from '../../styles/global.js'; // Importa o tema desejado
 
 const { width } = Dimensions.get('window');
 
@@ -50,7 +51,7 @@ export default function HomeScreen({ navigation }) {
         <View style={styles.cardText}>
           <Text style={styles.subtitle}>Conta corrente, cartão e investimentos</Text>
           <Text style={styles.description}>
-            Para acompanhar e apoiar sua ascensão onde estiver.
+            Para acompanhar e apoiar sua aascensão onde estiver.
           </Text>
           <TouchableOpacity
             style={styles.button}
@@ -103,7 +104,7 @@ const BenefitCard = ({ image, description, title }) => (
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    backgroundColor: '##223840',
+    backgroundColor: darkTheme.background,
   },
 
   // Seção de introdução
@@ -120,7 +121,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 8,
-    color: '#333',
+    color: darkTheme.text,
   },
   logoDecorator: {
     width: 100,
@@ -141,7 +142,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 16,
     textAlign: 'center',
-    color: '#333',
+    color: darkTheme.text,
   },
   benefitsList: {
     flexDirection: 'row',
@@ -161,12 +162,13 @@ const styles = StyleSheet.create({
   benefitDescription: {
     textAlign: 'center',
     fontSize: 14,
-    color: '#555',
+    color: darkTheme.text,
     marginBottom: 8,
   },
   benefitTitle: {
     fontWeight: 'bold',
     textAlign: 'center',
+    color: darkTheme.primary,
   },
 
   // Seção de conta e cartão
@@ -182,7 +184,7 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 14,
-    color: '#555',
+    color: darkTheme.text,
     marginBottom: 16,
   },
   button: {
@@ -193,7 +195,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonText: {
-    color: '#fff',
+    color: darkTheme.text,
     fontWeight: 'bold',
   },
   cardImage: {

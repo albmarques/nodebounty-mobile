@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
 import * as Yup from 'yup'; // Importando Yup
 import { api } from '../../libs/api.js';  // Two directories up to the root, then into libs/
-
+import { darkTheme } from '../../styles/global.js'; // Importa o tema desejado
 
 import { Button } from '../../components/Button'; // Botão recriado
 import { Input } from '../../components/Input'; // Input recriado
@@ -11,7 +11,7 @@ import { Input } from '../../components/Input'; // Input recriado
 const validationSchema = Yup.object().shape({
   nome: Yup.string().required('Nome completo é obrigatório'),
   cpf: Yup.string()
-    .length(11, 'CPF inválido')
+    .length(14, 'CPF inválido')
     .required('CPF é obrigatório'),
   rg: Yup.string().required('RG é obrigatório'),
   email: Yup.string().email('E-mail inválido').required('E-mail é obrigatório'),
@@ -207,7 +207,7 @@ export default function SignUpScreen({ navigation }) {
         />
 
         <TouchableOpacity
-          onPress={() => navigation.navigate('Login')}
+          onPress={() => navigation.navigate('Plans')}
           style={styles.loginRedirect}
         >
           <Text style={styles.loginRedirectText}>Já tem uma conta? Faça login</Text>
@@ -220,14 +220,14 @@ export default function SignUpScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#121212',
+    backgroundColor: darkTheme.background,
     padding: 20,
     justifyContent: 'center',
   },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#000',
+    color: darkTheme.primary,
     textAlign: 'center',
     marginBottom: 20,
   },

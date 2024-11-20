@@ -2,7 +2,7 @@ import React, { createContext, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api } from '../libs/api.js';
 
-export const AuthContext = createContext({});
+export const AuthContext = createContext();
 
 export function AuthContextProvider({ children }) {
   const [token, setToken] = useState(null);
@@ -30,7 +30,7 @@ export function AuthContextProvider({ children }) {
   async function logout() {
     await AsyncStorage.removeItem('node-bounty');
     setToken(null);
-    api.defaults.headers.common.Authorization = null;
+    delete api.defaults.headers.common.Authorization;
   }
 
   return (

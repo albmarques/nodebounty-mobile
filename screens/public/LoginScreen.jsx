@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import * as Yup from 'yup'; // Importing Yup for validation
 import { AuthContext } from '../../contexts/AuthContext.jsx';  // Adjust the path to go up two directories
-
+import { darkTheme } from '../../styles/global.js'; // Importa o tema desejado
 
 
 
@@ -45,7 +45,7 @@ export default function LoginScreen({ navigation }) {
       saveToken(data.token); // Store token
 
       // Redirect to Dashboard
-      navigation.navigate('Dashboard');
+      //navigation.navigate('Plans');
     } catch (err) {
       setIsSubmitting(false); // End submitting
 
@@ -119,7 +119,7 @@ export default function LoginScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#121212', // Corrected color code
+    backgroundColor: darkTheme.background,// Corrected color code
     padding: 20,
     justifyContent: 'center',
   },
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   passwordRecoveryText: {
-    color: '#1E90FF',
+    color: darkTheme.link,
     textDecorationLine: 'underline',
   },
 });
