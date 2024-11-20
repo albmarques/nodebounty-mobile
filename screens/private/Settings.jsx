@@ -2,23 +2,20 @@ import React, { useContext } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { darkTheme } from '../../styles/global.js'; // Importa o tema Dark
 import { AuthContext } from '../../contexts/AuthContext.jsx';
-
 import { Button } from '../../components/Button'; // Reusable Button component
 
 export default function Settings({ navigation }) {
   const { logout } = useContext(AuthContext);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     console.log('User logged out');
-    logout(); // Chama a função de logout do contexto
-    navigation.navigate('Login'); // Redireciona para a tela de Login após logout
+    await logout(); // Chama a função de logout do contexto
+     // Redireciona para a tela de Login após logout
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Settings</Text>
-
-   
 
       {/* Logout Button */}
       <View style={styles.option}>
@@ -31,21 +28,15 @@ export default function Settings({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: darkTheme.background,
     padding: 20,
-    backgroundColor: darkTheme.background, // Fundo da tela
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    color: darkTheme.primary,
     marginBottom: 20,
-    color: darkTheme.text, // Texto do título
   },
   option: {
-    marginBottom: 15,
-  },
-  optionText: {
-    fontSize: 18,
-    marginBottom: 5,
-    color: darkTheme.text, // Texto das opções
+    marginVertical: 10,
   },
 });

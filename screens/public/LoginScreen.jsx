@@ -45,7 +45,7 @@ export default function LoginScreen({ navigation }) {
       saveToken(data.token); // Store token
 
       // Redirect to Dashboard
-      navigation.navigate('Settings');
+      //navigation.navigate('Plans');
     } catch (err) {
       setIsSubmitting(false); // End submitting
 

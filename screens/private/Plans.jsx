@@ -1,42 +1,44 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, Button, ActivityIndicator, Alert, StyleSheet, TouchableOpacity } from 'react-native';import { api } from '../../libs/api.js'; // Ajuste o caminho do arquivo da API
+import { View, Text, Button, ActivityIndicator, Alert, StyleSheet, TouchableOpacity } from 'react-native';
+import { api } from '../../libs/api.js'; // Ajuste o caminho do arquivo da API
 import { AuthContext } from '../../contexts/AuthContext.jsx'; // Ajuste o caminho do seu contexto
 
-export default function Dashboard({ navigation }) {
+export default function Plans({ navigation }) {
   const [plans, setPlans] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedPlan, setSelectedPlan] = useState(null); // Atualizado para armazenar o plano selecionado
-  const { logout } = useContext(AuthContext);
- useEffect(() => {
-    async function retrievePlansData() {
+  const [selectedPlan, setSelectedPlan] = useState(null);
+  const { logout, token } = useContext(AuthContext);
+
+  useEffect(() => {
+    api.registerInterceptTokenManager(logout, () => token);
+
+    async function retrivePlansData() {
       try {
         setIsLoading(true);
         const response = await api.get('/conta');
 
-        // Usuário possui conta, redirecionar para a tela principal
         if (response.status === 200) {
-          navigation.navigate('MainTabs');
+          console.log(response.data);
+          navigation.navigate('RootTabs');
         }
       } catch (error) {
-        // Usuário não possui conta, pegar os dados dos planos
+        console.log(error);
         try {
           const { data } = await api.get('/planos');
-          if (data && Array.isArray(data)) {
-            setPlans(data);
-          } else {
-            throw new Error('Plano inválido');
-          }
+          console.log(data);
+          setPlans(data);
           setIsLoading(false);
         } catch (error) {
-          Alert.alert('Erro', 'Ocorreu um erro ao carregar os planos');
           console.log(error);
+          alert('Erro ao carregar planos');
           logout();
         }
       }
     }
-    retrievePlansData();
-  }, [logout, navigation]);
-async function handleSubmitPlan() {
+    retrivePlansData();
+  }, [logout, navigation, token]);
+
+  async function handleSubmitPlan() {
     if (!selectedPlan) {
       Alert.alert('Erro', 'Por favor, selecione um plano');
       return;
@@ -44,7 +46,7 @@ async function handleSubmitPlan() {
 
     try {
       await api.post('/conta', { nomePlano: selectedPlan });
-      navigation.navigate('MainTabs');
+      navigation.navigate('RootTabs');
     } catch (error) {
       Alert.alert('Erro', 'Ocorreu um erro, por favor tente novamente');
       console.log(error);
@@ -64,9 +66,9 @@ async function handleSubmitPlan() {
           key={plan.idPlano}
           style={[
             styles.card,
-            selectedPlan === plan.idPlano && styles.selectedCard, // Estilo para card selecionado
+            selectedPlan === plan.idPlano && styles.selectedCard,
           ]}
-          onPress={() => setSelectedPlan(plan.idPlano)} // Atualiza o plano selecionado
+          onPress={() => setSelectedPlan(plan.idPlano)}
         >
           <Text style={styles.cardTitle}>Plano {plan.idPlano}</Text>
           <Text style={styles.cardText}>
