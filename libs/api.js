@@ -7,7 +7,7 @@ class AppError extends Error {
   }
 }
 
-const API_BASE_URL = 'https://g4vpj6mr-8080.brs.devtunnels.ms/';
+const API_BASE_URL = 'https://vqn6gsz9-8080.brs.devtunnels.ms/';
 
 export const api = axios.create({
   baseURL: API_BASE_URL,

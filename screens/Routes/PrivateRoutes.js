@@ -28,6 +28,7 @@ function RootStack() {
                 options={{
                     headerTransparent: true,
                     title: '',
+                     headerLeft: () => null,
                 }}
             />
             <Stack.Screen name="Plans"
