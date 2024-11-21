@@ -73,13 +73,38 @@ export default function LoginScreen({ navigation }) {
           <Text style={styles.title}>ACESSO</Text>
 
           <View style={styles.formContainer}>
-            <StylizedInput icon='mail' placeholder='E-MAIL' value={email} onChangeText={setEmail} />
-            <StylizedInput icon='password' placeholder='SENHA' value={senha} onChangeText={setSenha} secureTextEntry={true} />
+            <StylizedInput
+              icon='mail'
+              placeholder='E-MAIL'
+              value={email}
+              onChangeText={setEmail}
+              errors={errors.email}
+            />
+            <StylizedInput
+              icon='password'
+              placeholder='SENHA'
+              value={senha}
+              onChangeText={setSenha}
+              secureTextEntry={true}
+              errors={errors.senha}
+            />
           </View>
 
           <View>
-            <StylizedButton text={isSubmitting ? <ActivityIndicator color="#fff" /> : 'Entrar'} onPress={handleRealizarLogin} disabled={isSubmitting} />
-            <StylizedButton text='ABRIR UMA CONTA' />
+            <StylizedButton
+              text={
+                isSubmitting ? <ActivityIndicator color="#fff" /> : 'Entrar'
+              }
+              onPress={
+                handleRealizarLogin
+              }
+              disabled={
+                isSubmitting
+              }
+            />
+            <StylizedButton
+              text='ABRIR UMA CONTA'
+              onPress={() => navigation.navigate('Cadastrar')} />
           </View>
         </View>
       </View>
