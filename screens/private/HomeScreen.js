@@ -46,7 +46,7 @@ export default function HomeScreen() {
           <View>
             <Text style={styles.cabecalhoContainer.text}>BEM VINDO, {dadosConta?.cliente?.nome?.split(' ')[0].toUpperCase()}</Text>
             {/* Adicionando o número da conta */}
-            <Text style={styles.cabecalhoContainer.text}>Conta: {dadosConta?.numeroConta}</Text>
+            {/* <Text style={styles.cabecalhoContainer.text}>Conta: {dadosConta?.numeroConta}</Text> */}
           </View>
           <View style={styles.cabecalhoContainer.plano}>
             <Text style={styles.cabecalhoContainer.text}>PLANO </Text>
@@ -90,8 +90,8 @@ export default function HomeScreen() {
 
           {/* Lista de Parceiros */}
           <View style={styles.parceirosContainer.parceiroSubContainer}>
-            {dadosConta?.plano?.parceiros?.[dadosConta?.plano?.idPlano] ? (
-              dadosConta?.plano?.parceiros?.[dadosConta?.plano?.idPlano]?.map((item) => (
+            {dadosConta?.plano?.parcerias?.[dadosConta?.plano?.idPlano] ? (
+              dadosConta?.plano?.parcerias?.[dadosConta?.plano?.idPlano]?.map((item) => (
                 <View key={item.conta} style={styles.parceiroItem}>
                   <Text style={styles.parceiroItem.nome}>{item.nome}</Text>
                   <Text style={styles.parceiroItem.conta}>Número da conta: {item.conta}</Text>

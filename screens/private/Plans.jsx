@@ -19,7 +19,7 @@ export default function Plans({ navigation }) {
 
         if (response.status === 200) {
           console.log(response.data);
-          navigation.navigate('RootTabs');
+          navigation.replace('RootTabs');
         }
       } catch (error) {
         console.log(error);
@@ -46,7 +46,7 @@ export default function Plans({ navigation }) {
 
     try {
       await api.post('/conta', { nomePlano: selectedPlan });
-      navigation.navigate('RootTabs');
+      navigation.popTo('RootTabs');
     } catch (error) {
       Alert.alert('Erro', 'Ocorreu um erro, por favor tente novamente');
       console.log(error);

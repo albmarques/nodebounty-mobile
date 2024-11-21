@@ -10,7 +10,7 @@ export function Input({ label, icon, errors, placeholder, ...rest }) {
         <TextInput 
           style={styles.input} 
           placeholder={placeholder} // Adiciona o placeholder
-          placeholderTextColor={darkTheme.text} // Define a cor do placeholder conforme o tema
+          placeholderTextColor={darkTheme.textPrimary} // Define a cor do placeholder conforme o tema
           {...rest} 
         />
         {icon && <View style={styles.icon}>{icon}</View>}
@@ -34,12 +34,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderBottomWidth: 1,
-    borderBottomColor: darkTheme.text, // Cor da borda padrão
+    borderBottomColor: darkTheme.textPrimary, // Cor da borda padrão
   },
   input: {
     flex: 1,
     fontSize: 16,
-    color: darkTheme.text, // Cor do texto digitado
+    color: darkTheme.textPrimary, // Cor do texto digitado
+    backgroundColor: darkTheme.backgroundPrimary, // Cor de fundo do input
     paddingVertical: 5,
   },
   icon: {
