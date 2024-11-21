@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 class AppError extends Error {
   constructor(message) {
     super(message);
@@ -6,21 +7,32 @@ class AppError extends Error {
   }
 }
 
-const API_BASE_URL = 'http://localhost:8080'; 
+const API_BASE_URL = 'https://vqn6gsz9-8080.brs.devtunnels.ms/';
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
 });
 
-api.registerInterceptTokenManager = (signOut) => {
-  api.interceptors.response.use(
-    (response) => response, 
-    async (requestError) => {
+api.registerInterceptTokenManager = (signOut, getToken) => {
+  api.interceptors.request.use(
+    (config) => {
+      const token = getToken();
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
+    }
+  );
 
+  api.interceptors.response.use(
+    (response) => response,
+    async (requestError) => {
       if (
         requestError.response?.status === 403 ||
-        requestError.response?.data?.message ===
-          'Cliente não encontrado no sistema'
+        requestError.response?.data?.message === 'Cliente não encontrado no sistema'
       ) {
         signOut();
         return Promise.reject(requestError);
@@ -34,4 +46,3 @@ api.registerInterceptTokenManager = (signOut) => {
     }
   );
 };
-  

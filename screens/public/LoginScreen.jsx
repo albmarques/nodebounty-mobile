@@ -1,15 +1,12 @@
 import React, { useState, useContext } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, SafeAreaView, StatusBar, Image } from 'react-native';
 import * as Yup from 'yup'; // Importing Yup for validation
+
 import { AuthContext } from '../../contexts/AuthContext.jsx';  // Adjust the path to go up two directories
-
-
-
-
+import { darkTheme } from '../../styles/global.js'; // Importa o tema desejado
 import { api } from '../../libs/api.js'; // Adjust path to go up two directories
-
-import { Button } from '../../components/Button'; // Reusable Button component
-import { Input } from '../../components/Input'; // Reusable Input component
+import StylizedButton from '../../components/StylizedButton.js'; // Reusable StylizedButton component
+import StylizedInput from '../../components/StylizedInput.js';
 
 // Defining the validation schema with Yup
 const validationSchema = Yup.object().shape({
@@ -45,7 +42,7 @@ export default function LoginScreen({ navigation }) {
       saveToken(data.token); // Store token
 
       // Redirect to Dashboard
-      navigation.navigate('Dashboard');
+      //navigation.navigate('Plans');
     } catch (err) {
       setIsSubmitting(false); // End submitting
 
@@ -65,82 +62,90 @@ export default function LoginScreen({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
-      <View style={styles.form}>
-        {/* Email Input */}
-        <Input
-          label="E-mail"
-          placeholder="Digite seu e-mail"
-          keyboardType="email-address"
-          onChangeText={setEmail}
-          value={email}
-          errors={errors.email}
-        />
+    <SafeAreaView style={styles.safeArea}>
+      <StatusBar backgroundColor={darkTheme.backgroundPrimary} barStyle='light-content' />
 
-        {/* Password Input */}
-        <Input
-          label="Senha"
-          placeholder="Digite sua senha"
-          secureTextEntry
-          onChangeText={setSenha}
-          value={senha}
-          errors={errors.senha}
-        />
+      <View style={styles.container}>
+        <View style={styles.logoContainer}>
+          <Image source={require('../../assets/logo/Logo.png')} style={styles.logo} />
+        </View>
+        <View style={styles.authContainer}>
+          <Text style={styles.title}>ACESSO</Text>
 
-        {/* Forgot password link */}
-        <TouchableOpacity
-          onPress={() => navigation.navigate('RecuperarSenha')}
-          style={styles.passwordRecovery}
-        >
-          <Text style={styles.passwordRecoveryText}>Esqueci minha senha</Text>
-        </TouchableOpacity>
+          <View style={styles.formContainer}>
+            <StylizedInput
+              icon='mail'
+              placeholder='E-MAIL'
+              value={email}
+              onChangeText={setEmail}
+              errors={errors.email}
+            />
+            <StylizedInput
+              icon='password'
+              placeholder='SENHA'
+              value={senha}
+              onChangeText={setSenha}
+              secureTextEntry={true}
+              errors={errors.senha}
+            />
+          </View>
 
-        {/* Login Button */}
-        <Button
-          titulo={isSubmitting ? <ActivityIndicator color="#fff" /> : 'Entrar'}
-          tipo="primario"
-          onPress={handleRealizarLogin}
-          disabled={isSubmitting}
-        />
-
-        {/* Sign up Button */}
-        <Button
-          titulo="Abra sua conta"
-          tipo="primario"
-          onPress={() => navigation.navigate('Cadastrar')}
-          disabled={isSubmitting}
-        />
+          <View>
+            <StylizedButton
+              text={
+                isSubmitting ? <ActivityIndicator color="#fff" /> : 'Entrar'
+              }
+              onPress={
+                handleRealizarLogin
+              }
+              disabled={
+                isSubmitting
+              }
+            />
+            <StylizedButton
+              text='ABRIR UMA CONTA'
+              onPress={() => navigation.navigate('Cadastrar')} />
+          </View>
+        </View>
       </View>
-    </View>
+
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
-    backgroundColor: '#121212', // Corrected color code
-    padding: 20,
+    backgroundColor: darkTheme.backgroundPrimary,
+  },
+  container: {
+    alignItems: 'center',
+  },
+  logoContainer: {
+    alignItems: 'center',
     justifyContent: 'center',
+    marginVertical: 30,
+  },
+  logo: {
+    width: 100,
+    height: 100,
+    resizeMode: 'contain',
+  },
+  authContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 15,
+    margin: 20,
+    borderRadius: 10,
+    backgroundColor: darkTheme.backgroundSecondary,
   },
   title: {
-    fontSize: 28,
+    fontSize: 20,
+    color: darkTheme.textPrimary,
     fontWeight: 'bold',
-    color: '#fff', // Changed to white for better visibility on dark background
-    textAlign: 'center',
-    marginBottom: 20,
+    marginBottom: 10,
   },
-  form: {
-    backgroundColor: 'rgba(30, 30, 30, 0.9)',
-    padding: 20,
-    borderRadius: 8,
-  },
-  passwordRecovery: {
-    alignSelf: 'flex-end',
-    marginBottom: 20,
-  },
-  passwordRecoveryText: {
-    color: '#1E90FF',
-    textDecorationLine: 'underline',
+  formContainer: {
+    marginVertical: 10,
   },
 });

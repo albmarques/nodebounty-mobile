@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
+import { SafeAreaView, ScrollView, View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, Alert, StatusBar, Image } from 'react-native';
 import * as Yup from 'yup'; // Importando Yup
 import { api } from '../../libs/api.js';  // Two directories up to the root, then into libs/
-
+import { darkTheme } from '../../styles/global.js'; // Importa o tema desejado
 
 import { Button } from '../../components/Button'; // Botão recriado
 import { Input } from '../../components/Input'; // Input recriado
+
+import StylizedButton from '../../components/StylizedButton.js';
+import StylizedInput from '../../components/StylizedInput.js';
 
 // Definindo o esquema de validação com Yup
 const validationSchema = Yup.object().shape({
   nome: Yup.string().required('Nome completo é obrigatório'),
   cpf: Yup.string()
-    .length(11, 'CPF inválido')
+    .length(14, 'CPF inválido')
     .required('CPF é obrigatório'),
   rg: Yup.string().required('RG é obrigatório'),
   email: Yup.string().email('E-mail inválido').required('E-mail é obrigatório'),
@@ -100,148 +103,154 @@ export default function SignUpScreen({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Cadastro</Text>
-      <View style={styles.form}>
-        <Input
-          label="Nome Completo"
-          placeholder="Digite seu nome completo"
-          onChangeText={setNome}
-          value={nome}
-          errors={errors.nome}
-        />
+    <SafeAreaView style={styles.safeArea}>
+      <StatusBar backgroundColor={darkTheme.backgroundPrimary} barStyle='light-content' />
 
-        <Input
-          label="CPF"
-          placeholder="Digite seu CPF"
-          keyboardType="numeric"
-          onChangeText={setCpf}
-          value={cpf}
-          errors={errors.cpf}
-        />
+      <ScrollView style={styles.container}>
+        <View style={styles.logoContainer}>
+          <Image source={require('../../assets/logo/Logo.png')} style={styles.logo} />
+        </View>
+        <View style={styles.authContainer}>
+          <Text style={styles.title}>CADASTRO</Text>
 
-        <Input
-          label="RG"
-          placeholder="Digite seu RG"
-          onChangeText={setRg}
-          value={rg}
-          errors={errors.rg}
-        />
+          <View style={styles.formContainer}>
+            <StylizedInput
+              icon='user'
+              placeholder='Nome completo'
+              value={nome}
+              onChangeText={setNome}
+              errors={errors.nome}
+            />
+            <StylizedInput
+              icon='cpf'
+              placeholder='CPF'
+              value={cpf}
+              onChangeText={setCpf}
+              errors={errors.cpf}
+            />
+            <StylizedInput
+              icon='rg'
+              placeholder='RG'
+              value={rg}
+              onChangeText={setRg}
+              errors={errors.rg}
+            />
+            <StylizedInput
+              icon='mail'
+              placeholder='E-mail'
+              value={email}
+              onChangeText={setEmail}
+              errors={errors.email}
+            />
+            <StylizedInput
+              icon='phone'
+              placeholder='Telefone'
+              value={telefone}
+              onChangeText={setTelefone}
+              errors={errors.telefone}
+            />
+            <StylizedInput
+              icon='calendar'
+              placeholder='Data de nascimento'
+              value={dataNascimento}
+              onChangeText={setDataNascimento}
+              errors={errors.dataNascimento}
+            />
+            <StylizedInput
+              icon='password'
+              placeholder='Senha'
+              value={senha}
+              onChangeText={setSenha}
+              secureTextEntry={true}
+              errors={errors.senha}
+            />
+            <StylizedInput
+              icon='password'
+              placeholder='Confirmar senha'
+              value={confirmarSenha}
+              onChangeText={setConfirmarSenha}
+              secureTextEntry={true}
+              errors={errors.confirmarSenha}
+            />
+            <StylizedInput
+              icon='cep'
+              placeholder='CEP'
+              value={cep}
+              onChangeText={setCep}
+              errors={errors.cep}
+            />
+            <StylizedInput
+              icon='map'
+              placeholder='Endereço'
+              value={endereco}
+              onChangeText={setEndereco}
+              errors={errors.endereco}
+            />
+            <StylizedInput
+              icon='number'
+              placeholder='Número'
+              value={numero}
+              onChangeText={setNumero}
+              errors={errors.numero}
+            />
+          </View>
 
-        <Input
-          label="E-mail"
-          placeholder="Digite seu e-mail"
-          keyboardType="email-address"
-          onChangeText={setEmail}
-          value={email}
-          errors={errors.email}
-        />
+          <View>
+            <StylizedButton
+              text={
+                isSubmitting ? <ActivityIndicator color="#fff" /> : 'Entrar'
+              }
+              onPress={
+                handleCadastrar
+              }
+              disabled={
+                isSubmitting
+              }
+            />
+            <StylizedButton
+              text='Ja tenho uma conta'
+              onPress={() => navigation.navigate('Login')} />
+          </View>
+        </View>
+      </ScrollView>
 
-        <Input
-          label="Telefone"
-          placeholder="Digite seu telefone"
-          keyboardType="phone-pad"
-          onChangeText={setTelefone}
-          value={telefone}
-          errors={errors.telefone}
-        />
-
-        <Input
-          label="Data de Nascimento"
-          placeholder="Digite sua data de nascimento"
-          keyboardType="numeric"
-          onChangeText={setDataNascimento}
-          value={dataNascimento}
-          errors={errors.dataNascimento}
-        />
-
-        <Input
-          label="Senha"
-          placeholder="Digite sua senha"
-          secureTextEntry
-          onChangeText={setSenha}
-          value={senha}
-          errors={errors.senha}
-        />
-
-        <Input
-          label="Confirmar Senha"
-          placeholder="Confirme sua senha"
-          secureTextEntry
-          onChangeText={setConfirmarSenha}
-          value={confirmarSenha}
-          errors={errors.confirmarSenha}
-        />
-
-        <Input
-          label="CEP"
-          placeholder="Digite seu CEP"
-          keyboardType="numeric"
-          onChangeText={setCep}
-          value={cep}
-          errors={errors.cep}
-        />
-
-        <Input
-          label="Endereço"
-          placeholder="Digite seu endereço"
-          onChangeText={setEndereco}
-          value={endereco}
-          errors={errors.endereco}
-        />
-
-        <Input
-          label="Número"
-          placeholder="Digite o número"
-          keyboardType="numeric"
-          onChangeText={setNumero}
-          value={numero}
-          errors={errors.numero}
-        />
-
-        <Button
-          titulo={isSubmitting ? <ActivityIndicator color="#fff" /> : 'Cadastrar'}
-          tipo="primario"
-          onPress={handleCadastrar}
-          disabled={isSubmitting}
-        />
-
-        <TouchableOpacity
-          onPress={() => navigation.navigate('Login')}
-          style={styles.loginRedirect}
-        >
-          <Text style={styles.loginRedirectText}>Já tem uma conta? Faça login</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
-    backgroundColor: '#121212',
-    padding: 20,
+    backgroundColor: darkTheme.backgroundPrimary,
+  },
+  container: {
+    
+  },
+  logoContainer: {
+    alignItems: 'center',
     justifyContent: 'center',
+    marginVertical: 30,
+  },
+  logo: {
+    width: 100,
+    height: 100,
+    resizeMode: 'contain',
+  },
+  authContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 15,
+    margin: 20,
+    borderRadius: 10,
+    backgroundColor: darkTheme.backgroundSecondary,
   },
   title: {
-    fontSize: 28,
+    fontSize: 20,
+    color: darkTheme.textPrimary,
     fontWeight: 'bold',
-    color: '#000',
-    textAlign: 'center',
-    marginBottom: 20,
+    marginBottom: 10,
   },
-  form: {
-    backgroundColor: 'rgba(30, 30, 30, 0.9)',
-    padding: 20,
-    borderRadius: 8,
-  },
-  loginRedirect: {
-    alignSelf: 'center',
-    marginTop: 20,
-  },
-  loginRedirectText: {
-    color: '#1E90FF',
-    textDecorationLine: 'underline',
+  formContainer: {
+    marginVertical: 10,
   },
 });
