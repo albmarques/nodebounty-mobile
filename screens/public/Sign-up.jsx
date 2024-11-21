@@ -220,7 +220,7 @@ export default function SignUpScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: darkTheme.background,
+    backgroundColor: darkTheme.backgroundPrimary,
     padding: 20,
     justifyContent: 'center',
   },

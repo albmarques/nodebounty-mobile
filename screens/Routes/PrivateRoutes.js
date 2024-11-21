@@ -22,20 +22,25 @@ export default function PrivateRoutes() {
 
 function RootStack() {
     return (
-        <Stack.Navigator initialRouteName='Plans'>
+        <Stack.Navigator initialRouteName='Plans'
+            screenOptions={{
+                headerTransparent: true,
+                headerTitle: '',
+            }}
+        >
             <Stack.Screen name="RootTabs"
                 component={RootTabs}
-                options={{
-                    headerTransparent: true,
-                    title: '',
-                }}
+                // options={{
+                //     headerTransparent: true,
+                //     title: '',
+                // }}
             />
             <Stack.Screen name="Plans"
                 component={Plans}
-                options={{
-                    headerTransparent: true,
-                    title: '',
-                }}
+                // options={{
+                //     headerTransparent: true,
+                //     title: '',
+                // }}
             />
         </Stack.Navigator>
     )

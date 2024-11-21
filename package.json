@@ -18,7 +18,7 @@
     "@rneui/themed": "^4.0.0-rc.8",
     "axios": "*",
     "dayjs": "^1.11.9",
-    "expo": "^52.0.8",
+    "expo": "^52.0.9",
     "expo-status-bar": "~2.0.0",
     "react": "^18.3.1",
     "react-hook-form": "^7.46.0",
