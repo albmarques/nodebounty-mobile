@@ -22,8 +22,8 @@ export default function StylizedInput({ label, placeholder, value, onChangeText,
                         {...rest}
                     />
                 </View>
-                {errors && <Text style={styles.errorMessage}>{errors}</Text>}
             </View>
+            {errors && <Text style={styles.errorMessage}>{errors}</Text>}
 
         </View>
     );
@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 10,
         padding: 3,
+        width: Dimensions.get("window").width * 0.8,
     },
     inputContainer2: {
         flexDirection: "row",
