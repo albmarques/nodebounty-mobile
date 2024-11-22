@@ -19,7 +19,7 @@ export default function Settings({ navigation }) {
 
       {/* Logout Button */}
       <View style={styles.option}>
-        <Button titulo="Sair" onPress={handleLogout} color={darkTheme.backgroundSecondary} />
+        <Button titulo="Sair" onPress={handleLogout} color={darkTheme.secondary} />
       </View>
     </View>
   );
@@ -28,7 +28,7 @@ export default function Settings({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: darkTheme.backgroundPrimary,
+    backgroundColor: darkTheme.background,
     padding: 20,
   },
   title: {
