@@ -4,11 +4,9 @@ import * as Yup from 'yup'; // Importando Yup
 import { api } from '../../libs/api.js';  // Two directories up to the root, then into libs/
 import { darkTheme } from '../../styles/global.js'; // Importa o tema desejado
 
-import { Button } from '../../components/Button'; // Botão recriado
-import { Input } from '../../components/Input'; // Input recriado
-
 import StylizedButton from '../../components/StylizedButton.js';
 import StylizedInput from '../../components/StylizedInput.js';
+import StylizedInputMasked from '../../components/StylizedInputMasked.js';
 
 // Definindo o esquema de validação com Yup
 const validationSchema = Yup.object().shape({
@@ -48,14 +46,35 @@ export default function SignUpScreen({ navigation }) {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  function convertToDate(maskedDate) {
+    const [day, month, year] = maskedDate.split('/');
+    const date = new Date(`${year}-${month}-${day}`);
+    const formattedDate = date.toISOString().split('T')[0];
+    return formattedDate;
+  }
+
   const handleCadastrar = async () => {
+    const dataNascimentoFormatted = convertToDate(dataNascimento);
+    console.log(dataNascimentoFormatted);
     const newErrors = {};
     console.log("Iniciando a validação");
 
     try {
       console.log("Validando os campos com Yup...");
       await validationSchema.validate(
-        { nome, cpf, rg, email, telefone, dataNascimento, senha, confirmarSenha, cep, endereco, numero },
+        {
+          nome,
+          cpf,
+          rg,
+          email,
+          telefone,
+          dataNascimento: dataNascimentoFormatted,
+          senha,
+          confirmarSenha,
+          cep,
+          endereco,
+          numero
+        },
         { abortEarly: false }
       );
 
@@ -72,7 +91,7 @@ export default function SignUpScreen({ navigation }) {
         rg,
         email,
         telefone,
-        dataNascimento,
+        dataNascimento: dataNascimentoFormatted,
         senha,
         cep,
         endereco,
@@ -115,25 +134,30 @@ export default function SignUpScreen({ navigation }) {
 
           <View style={styles.formContainer}>
             <StylizedInput
-              icon='user'
+              icon='person'
               placeholder='Nome completo'
               value={nome}
               onChangeText={setNome}
               errors={errors.nome}
             />
-            <StylizedInput
-              icon='cpf'
+            <StylizedInputMasked
+              icon='fingerprint'
               placeholder='CPF'
               value={cpf}
               onChangeText={setCpf}
               errors={errors.cpf}
+              maskType='cpf'
             />
-            <StylizedInput
-              icon='rg'
+            <StylizedInputMasked
+              icon='fingerprint'
               placeholder='RG'
               value={rg}
               onChangeText={setRg}
               errors={errors.rg}
+              maskType="custom"
+              optionsMask={{
+                mask: '99.999.999-9',
+              }}
             />
             <StylizedInput
               icon='mail'
@@ -141,20 +165,26 @@ export default function SignUpScreen({ navigation }) {
               value={email}
               onChangeText={setEmail}
               errors={errors.email}
+
             />
-            <StylizedInput
+            <StylizedInputMasked
               icon='phone'
               placeholder='Telefone'
               value={telefone}
               onChangeText={setTelefone}
               errors={errors.telefone}
+              maskType='cel-phone'
             />
-            <StylizedInput
-              icon='calendar'
+            <StylizedInputMasked
+              icon='calendar-today'
               placeholder='Data de nascimento'
               value={dataNascimento}
               onChangeText={setDataNascimento}
               errors={errors.dataNascimento}
+              maskType='datetime'
+              optionsMask={{
+                format: 'DD/MM/YYYY',
+              }}
             />
             <StylizedInput
               icon='password'
@@ -172,12 +202,16 @@ export default function SignUpScreen({ navigation }) {
               secureTextEntry={true}
               errors={errors.confirmarSenha}
             />
-            <StylizedInput
-              icon='cep'
+            <StylizedInputMasked
+              icon='place'
               placeholder='CEP'
               value={cep}
               onChangeText={setCep}
               errors={errors.cep}
+              maskType='custom'
+              optionsMask={{
+                mask: '99999-999',
+              }}
             />
             <StylizedInput
               icon='map'
@@ -186,19 +220,20 @@ export default function SignUpScreen({ navigation }) {
               onChangeText={setEndereco}
               errors={errors.endereco}
             />
-            <StylizedInput
-              icon='number'
+            <StylizedInputMasked
+              icon='pin'
               placeholder='Número'
               value={numero}
               onChangeText={setNumero}
               errors={errors.numero}
+              maskType='only-numbers'
             />
           </View>
 
           <View>
             <StylizedButton
               text={
-                isSubmitting ? <ActivityIndicator color="#fff" /> : 'Entrar'
+                isSubmitting ? <ActivityIndicator color="#fff" /> : 'Criar Uma conta'
               }
               onPress={
                 handleCadastrar
@@ -224,7 +259,7 @@ const styles = StyleSheet.create({
     backgroundColor: darkTheme.backgroundPrimary,
   },
   container: {
-    
+
   },
   logoContainer: {
     alignItems: 'center',
