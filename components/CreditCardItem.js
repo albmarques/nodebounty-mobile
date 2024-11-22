@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
-
-export function CreditCardItem({ numeroCartao, validadeCartao, cvcCartao, color = 'blue' }) {
+import { View, Text, TouchableOpacity, Button, StyleSheet } from 'react-native';
+export const CreditCardItem = ({ numeroCartao, validadeCartao, cvcCartao, color = 'blue' }) =>{
   const [isMasked, setIsMasked] = useState(true);
 
   const handleMaskToggle = () => {
@@ -13,18 +12,13 @@ export function CreditCardItem({ numeroCartao, validadeCartao, cvcCartao, color 
   };
 
   const maskCardNumber = (numeroCartao) => {
-    if (isMasked) {
-      return '•••• •••• •••• ' + numeroCartao.substr(12, 4); // Mascara o número do cartão
-    } else {
-      return formatCardNumber(numeroCartao); // Exibe o número completo
-    }
+    return isMasked ? '•••• •••• •••• ' + numeroCartao.slice(-4) : formatCardNumber(numeroCartao); // Máscara/Desmascara número do cartão
   };
 
   const maskCvc = (cvcCartao) => {
-    return isMasked ? '•••' : cvcCartao; // Mascara o CVV
+    return isMasked ? '•••' : cvcCartao; // Máscara/Desmascara CVC
   };
 
-  // Determina a cor de fundo com base no valor da prop 'color'
   const backgroundColor = color === 'blue' 
     ? '#2a5298' 
     : color === 'green' 
@@ -35,13 +29,11 @@ export function CreditCardItem({ numeroCartao, validadeCartao, cvcCartao, color 
     <View style={[styles.cardContainer, { backgroundColor }]}>
       <View style={styles.cardContent}>
         <Text style={styles.cardNumber}>{maskCardNumber(numeroCartao)}</Text>
-        <TouchableOpacity onPress={handleMaskToggle}>
-          <Image
-            source={isMasked ? eyeSlash : eye}
-            style={styles.eyeIcon}
-            resizeMode="contain"
-          />
-        </TouchableOpacity>
+        <Button 
+          title={isMasked ? "Mostrar" : "Ocultar"} 
+          onPress={handleMaskToggle}
+          color="#fff"
+        />
       </View>
       <View style={styles.infoContainer}>
         <View style={styles.infoBlock}>
@@ -82,11 +74,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#fff',
     letterSpacing: 2,
-  },
-  eyeIcon: {
-    width: 30,
-    height: 30,
-    tintColor: '#fff', // Altera a cor do ícone para branco
   },
   infoContainer: {
     flexDirection: 'row',

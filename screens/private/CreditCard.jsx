@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, Alert, ActivityIndicator, ToastAndroid, Platform, SafeAreaView, ScrollView } from 'react-native';
 import { api } from '../../libs/api.js';
 import StylizedButton from '../../components/StylizedButton';
+import CreditCardItem from "../../components/CreditCardItem"
 
 function showToast(message) {
   if (Platform.OS === 'android') {
@@ -108,14 +109,14 @@ export default function CreditCard() {
           <FlatList
             data={cartoes}
             keyExtractor={(item) => item.idCartao.toString()}
-            renderItem={({ item }) => (
-              <Cartao
-                numeroCartao={item.numeroCartao}
-                validadeCartao={item.validadeCartao}
-                cvcCartao={item.cvcCartao}
-                onDelete={() => confirmarDelecao(item.idCartao)}
-              />
-            )}
+          renderItem={({ item }) => (
+  <Cartao
+    numeroCartao={item.numeroCartao}
+    validadeCartao={item.validadeCartao}
+    cvcCartao={item.cvcCartao} // Remove extra `}`
+  />
+)}
+
             ListEmptyComponent={<Text style={styles.emptyText}>Nenhum cartão encontrado</Text>}
           />
         )}
@@ -133,6 +134,7 @@ export default function CreditCard() {
             disabled={isProcessing}
           />
         </View>
+
       </ScrollView>
     </SafeAreaView>
   );

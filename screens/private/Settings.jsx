@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { darkTheme } from '../../styles/global.js'; // Importa o tema Dark
 import { AuthContext } from '../../contexts/AuthContext.jsx';
 import { Button } from '../../components/Button'; // Reusable Button component
-
+import StylizedButton from '../../components/StylizedButton';
 export default function Settings({ navigation }) {
   const { logout } = useContext(AuthContext);
 
@@ -19,7 +19,10 @@ export default function Settings({ navigation }) {
 
       {/* Logout Button */}
       <View style={styles.option}>
-        <Button titulo="Sair" onPress={handleLogout} color={darkTheme.secondary} />
+         <StylizedButton
+            text="Sair"
+            onPress={handleLogout}
+          />
       </View>
     </View>
   );
@@ -28,7 +31,7 @@ export default function Settings({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: darkTheme.background,
+    backgroundColor: darkTheme.backgroundPrimary,
     padding: 20,
   },
   title: {
@@ -37,6 +40,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   option: {
+    justifyContent:"center",
+    textAlign:"center",
     marginVertical: 10,
   },
 });
