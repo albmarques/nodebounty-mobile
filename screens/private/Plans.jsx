@@ -6,6 +6,7 @@ import { AuthContext } from '../../contexts/AuthContext.jsx'; // Ajuste o caminh
 import { darkTheme, planos } from '../../styles/global.js';
 import { Icon } from '@rneui/base';
 import StylizedButton from '../../components/StylizedButton.js';
+import StylizedLoading from '../../components/StylizedLoading.js';
 
 export default function Plans({ navigation }) {
   const [plans, setPlans] = useState([]);
@@ -58,7 +59,7 @@ export default function Plans({ navigation }) {
   }
 
   if (isLoading) {
-    return <ActivityIndicator size="large" color="#FFF" />;
+    return <StylizedLoading />;
   }
 
   return (

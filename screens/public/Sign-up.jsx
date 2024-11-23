@@ -257,6 +257,7 @@ export default function SignUpScreen({ navigation }) {
 
           <View>
             <StylizedButton
+              icon='check'
               text={
                 isSubmitting ? <ActivityIndicator color="#fff" /> : 'Criar Uma conta'
               }
@@ -268,6 +269,7 @@ export default function SignUpScreen({ navigation }) {
               }
             />
             <StylizedButton
+              icon='login'
               text='Ja tenho uma conta'
               onPress={() => navigation.navigate('Login')} />
           </View>
