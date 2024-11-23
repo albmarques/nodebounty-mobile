@@ -2,6 +2,11 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { darkTheme } from '../../styles/global.js'; // Importa o tema desejado
 import StylizedButton from '../../components/StylizedButton';
+import { Deposit } from '../../components/Depositar.jsx';
+import { Withdraw } from '../../components/Withdraw.jsx';
+import { Transfer } from '../../components/Transfer.jsx';
+import { Extract } from '../../components/Extract.jsx';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export default function WalletScreen() {
   const [activeComponent, setActiveComponent] = useState('DEPOSITAR'); // Define o estado inicial
@@ -9,11 +14,14 @@ export default function WalletScreen() {
   const renderComponent = () => {
     switch (activeComponent) {
       case 'DEPOSITAR':
-        return <Text style={styles.operationText}>DEPOSITAR</Text>;
+        return <Deposit/>;
       case 'SACAR':
-        return <Text style={styles.operationText}>SACAR</Text>;
+        return <Withdraw/>;
       case 'TRANSFERIR':
-        return <Text style={styles.operationText}>TRANSFERIR</Text>;
+        return <Transfer/>;
+      case 'EXTRATO':
+        return <Extract/>;
+        
       default:
         return <Text style={styles.operationText}>Escolha uma opção</Text>;
     }
@@ -30,11 +38,11 @@ export default function WalletScreen() {
         <Text style={styles.balanceLabel}>SALDO EM CONTA</Text>
         <View style={styles.balanceValueContainer}>
           <Text style={styles.balanceValue}>R$ 123.456,99</Text>
-          <TouchableOpacity style={styles.eyeIcon}>
+          <TouchableOpacity style={styles.eyeIcon}  >
             <Text style={styles.eyeText}>👁️</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => setActiveComponent('EXTRATO')}>
           <Text style={styles.extractText}>VER EXTRATO</Text>
         </TouchableOpacity>
       </View>
@@ -131,15 +139,15 @@ const styles = StyleSheet.create({
   },
   operationButton: {
     backgroundColor: '#444',
-    paddingVertical: 20,
-    paddingHorizontal: 30,
+    paddingVertical: 15,
+    paddingHorizontal:15,
     borderRadius: 10,
     flex: 1,
     alignItems: 'center',
   },
   operationText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 10,
     fontWeight: 'bold',
   },
 });

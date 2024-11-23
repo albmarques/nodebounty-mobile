@@ -100,43 +100,38 @@ export default function CreditCard() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScrollView style={styles.container}>
-        {isLoading ? (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#0000ff" />
-          </View>
-        ) : (
-          <FlatList
-            data={cartoes}
-            keyExtractor={(item) => item.idCartao.toString()}
-          renderItem={({ item }) => (
-  <Cartao
-    numeroCartao={item.numeroCartao}
-    validadeCartao={item.validadeCartao}
-    cvcCartao={item.cvcCartao} // Remove extra `}`
-  />
-)}
-
-            ListEmptyComponent={<Text style={styles.emptyText}>Nenhum cartão encontrado</Text>}
+    {isLoading ? (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    ) : (
+      <FlatList
+        data={cartoes}
+        keyExtractor={(item) => item.idCartao.toString()}
+        renderItem={({ item }) => (
+          <Cartao
+            numeroCartao={item.numeroCartao}
+            validadeCartao={item.validadeCartao}
+            cvcCartao={item.cvcCartao}
+            onDelete={() => confirmarDelecao(item.idCartao)}
           />
         )}
-
-        {isProcessing && (
-          <View style={styles.processingContainer}>
-            <ActivityIndicator size="small" color="#0000ff" />
+        ListEmptyComponent={<Text style={styles.emptyText}>Nenhum cartão encontrado</Text>}
+        ListHeaderComponent={
+          <View style={styles.buttonContainer}>
+            <StylizedButton
+              text={isProcessing ? 'Gerando...' : 'Gerar Cartão'}
+              onPress={GerarCartao}
+              disabled={isProcessing}
+            />
           </View>
-        )}
+        }
+        contentContainerStyle={cartoes.length === 0 ? { flexGrow: 1, justifyContent: 'center' } : null}
+      />
+    )}
+  </SafeAreaView>
+  
 
-        <View style={styles.buttonContainer}>
-          <StylizedButton
-            text={isProcessing ? 'Gerando...' : 'Gerar Cartão'}
-            onPress={GerarCartao}
-            disabled={isProcessing}
-          />
-        </View>
-
-      </ScrollView>
-    </SafeAreaView>
   );
 }
 
