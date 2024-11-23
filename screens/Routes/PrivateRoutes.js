@@ -6,6 +6,7 @@ import { MaterialCommunityIcons } from 'react-native-vector-icons'; // Corrigido
 import HomeScreenPrivate from '../private/HomeScreen.js';
 import Settings from '../private/Settings.jsx';
 import Plans from '../private/Plans.jsx';
+import CreditCard from '../private/CreditCard.jsx';
 
 
 const Tab = createBottomTabNavigator();
@@ -80,7 +81,7 @@ function RootTabs() {
             />
             <Tab.Screen
                 name="Cards"
-                component={Settings}
+                component={CreditCard}
                 options={{ title: '' }}
             />
             <Tab.Screen

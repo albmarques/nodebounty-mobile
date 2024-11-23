@@ -136,7 +136,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flexGrow: 1,
-    backgroundColor: '#2C3336',
+    backgroundColor: darkTheme.backgroundPrimary,
   },
 
   geralContainer: {
@@ -241,8 +241,10 @@ const styles = StyleSheet.create({
   parceiroItem: {
     marginBottom: 10,
     padding: 20,
-    backgroundColor: darkTheme.backgroundSecondary,
+    backgroundColor: darkTheme.backgroundPrimary,
     borderRadius: 10,
+    borderWidth: 0.6,
+    borderColor: darkTheme.textPrimary,
     flexDirection: 'row',
   },
   parceiroTitle: {
