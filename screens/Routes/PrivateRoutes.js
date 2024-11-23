@@ -6,7 +6,8 @@ import { MaterialCommunityIcons } from 'react-native-vector-icons'; // Corrigido
 import HomeScreenPrivate from '../private/HomeScreen.js';
 import Settings from '../private/Settings.jsx';
 import Plans from '../private/Plans.jsx';
-
+import CreditCard from "../private/CreditCard.jsx"
+import Wallet from "../private/Wallet.jsx"
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -30,17 +31,17 @@ function RootStack() {
         >
             <Stack.Screen name="RootTabs"
                 component={RootTabs}
-                // options={{
-                //     headerTransparent: true,
-                //     title: '',
-                // }}
+            // options={{
+            //     headerTransparent: true,
+            //     title: '',
+            // }}
             />
             <Stack.Screen name="Plans"
                 component={Plans}
-                // options={{
-                //     headerTransparent: true,
-                //     title: '',
-                // }}
+            // options={{
+            //     headerTransparent: true,
+            //     title: '',
+            // }}
             />
         </Stack.Navigator>
     )
@@ -76,16 +77,20 @@ function RootTabs() {
             <Tab.Screen
                 name="Home"
                 component={HomeScreenPrivate}
-                options={{ title: '' }}
+                options={{
+                    title: '',
+                    unmountOnBlur: true, // Adiciona desmontagem ao sair da aba
+                }}
             />
+
             <Tab.Screen
                 name="Cards"
-                component={Settings}
+                component={CreditCard}
                 options={{ title: '' }}
             />
             <Tab.Screen
                 name="Wallet"
-                component={Settings}
+                component={Wallet}
                 options={{ title: '' }}
             />
             <Tab.Screen
