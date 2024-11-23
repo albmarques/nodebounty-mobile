@@ -112,6 +112,12 @@ export default function HomeScreen() {
                     parceiro === 'Pichau' ? require('../../assets/planos/tech/Pichau.png') :
                     parceiro === 'KaBum' ? require('../../assets/planos/tech/Kabum.png') :
                     parceiro === 'TeraByte Shop' ? require('../../assets/planos/tech/Terabyte.png') :
+                    parceiro === 'MAC' ? require('../../assets/planos/beauty/MAC.png') :
+                    parceiro === 'MakeB' ? require('../../assets/planos/beauty/makeB.png') :
+                    parceiro === 'Vult' ? require('../../assets/planos/beauty/Vult.png') :
+                    parceiro === 'Drogasil' ? require('../../assets/planos/health/drogasil.png') :
+                    parceiro === 'Growth' ? require('../../assets/planos/health/Growth.png') :
+                    parceiro === 'OficialFarma' ? require('../../assets/planos/health/oficialfarma.png') :
                     require('../../assets/planos/tech/Pichau.png')
                   } style={{ width: 50, height: 50}}/>
                 </View>
@@ -228,12 +234,12 @@ const styles = StyleSheet.create({
     },
 
     parceiroSubContainer: {
-      marginTop: 10,
+      marginTop: 20,
     },
   },
 
   parceiroItem: {
-    marginBottom: 15,
+    marginBottom: 10,
     padding: 20,
     backgroundColor: darkTheme.backgroundSecondary,
     borderRadius: 10,

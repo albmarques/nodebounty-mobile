@@ -171,12 +171,12 @@ const styles = StyleSheet.create({
   },
   description: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 12,
     textAlign: 'center',
   },
   parcerias: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 20,
     textAlign: 'center',
     marginTop: 10,
     fontWeight: 'bold',
