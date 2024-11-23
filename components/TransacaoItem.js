@@ -38,6 +38,8 @@ export default function TransacaoItem({ trade }) {
         return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor);
     }
 
+    console.log(trade.transacao.emissor, trade.transacao.receptor);
+
     return (
         <View style={styles.container}>
             <Icon name={icon} size={30} type="material-community" color={
