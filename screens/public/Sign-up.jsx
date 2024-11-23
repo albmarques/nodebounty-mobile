@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { SafeAreaView, ScrollView, View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, Alert, StatusBar, Image } from 'react-native';
 import * as Yup from 'yup'; // Importando Yup
+
 import { api } from '../../libs/api.js';  // Two directories up to the root, then into libs/
 import { darkTheme } from '../../styles/global.js'; // Importa o tema desejado
-
 import StylizedButton from '../../components/StylizedButton.js';
 import StylizedInput from '../../components/StylizedInput.js';
 import StylizedInputMasked from '../../components/StylizedInputMasked.js';
@@ -83,6 +83,7 @@ export default function SignUpScreen({ navigation }) {
       // Iniciando a requisição de cadastro
       setIsSubmitting(true);
       console.log("Realizando a requisição para cadastro...");
+      
 
       // Realizando a requisição de cadastro
       const { data } = await api.post('/clientes', {
@@ -97,6 +98,7 @@ export default function SignUpScreen({ navigation }) {
         endereco,
         numero,
       });
+      console.log(data);
 
       console.log('Cadastro realizado com sucesso:', data);
       Alert.alert('Cadastro realizado', 'Sua conta foi criada com sucesso!');
