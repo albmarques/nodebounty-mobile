@@ -244,11 +244,11 @@ const styles = StyleSheet.create({
     backgroundColor: darkTheme.backgroundPrimary,
     borderRadius: 10,
     borderWidth: 0.6,
-    borderColor: darkTheme.textPrimary,
+    borderColor: darkTheme.textSecondary,
     flexDirection: 'row',
   },
   parceiroTitle: {
-    color: darkTheme.textPrimary,
+    color: darkTheme.textSecondary,
     fontSize: 25,
     fontWeight: 'bold',
   },

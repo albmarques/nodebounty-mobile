@@ -5,6 +5,7 @@ import { api } from '../../libs/api.js';
 import StylizedButton from '../../components/StylizedButton';
 import CreditCardItem from "../../components/CreditCardItem";
 import { Icon } from '@rneui/base';
+import TransacaoItem from '../../components/TransacaoItem.js';
 
 function showToast(message) {
     if (Platform.OS === 'android') {
@@ -29,25 +30,17 @@ function handleApiError(error, defaultMessage) {
     Alert.alert('Erro', userMessage || 'Erro desconhecido.');
 }
 
-const Cartao = ({ numeroCartao, validadeCartao, cvcCartao, onDelete }) => (
-    <View style={styles.cartaoContainer}>
-        <Text style={styles.cartaoText}>{`Número: ${numeroCartao}`}</Text>
-        <Text style={styles.cartaoText}>{`Validade: ${validadeCartao}`}</Text>
-        <Text style={styles.cartaoText}>{`CVC: ${cvcCartao}`}</Text>
-        <StylizedButton text="Excluir Cartão" onPress={onDelete} />
-    </View>
-);
-
 export default function CreditCard() {
     const [cartoes, setCartoes] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isProcessing, setIsProcessing] = useState(false);
     const [dadosConta, setDadosConta] = useState(null);
+    const [transacoes, setTransacoes] = useState([]);
 
     const consultaCartoes = useCallback(async () => {
         setIsLoading(true);
         try {
-            const { data } = await api.get('/cartoes');
+            const { data } = await api.get(`/cartoes`);
             setCartoes(data);
         } catch (error) {
             handleApiError(error, 'Não foi possível carregar os cartões');
@@ -76,6 +69,23 @@ export default function CreditCard() {
     useEffect(() => {
         loadAccountData();
     }, [loadAccountData]);
+
+    const consultaTransacao = useCallback(async () => {
+        setIsLoading(true);
+        try {
+            const { data } = await api.get(`/transacoes`);
+            setTransacoes(data);
+            console.log(data);
+        } catch (error) {
+            handleApiError(error, 'Não foi possível carregar as movimentações');
+        } finally {
+            setIsLoading(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        consultaTransacao();
+    }, [consultaTransacao]);
 
     const GerarCartao = async () => {
         setIsProcessing(true);
@@ -165,9 +175,19 @@ export default function CreditCard() {
                     </View>
                 </ScrollView>
                 <View style={styles.movimentacaoContainer}>
-
+                    <Text style={styles.cabecalhoText}>MOVIMENTAÇÕES</Text>
                     <ScrollView>
-                        
+                        <View>
+                            {isLoading ? ( // Se estiver carregando, exibe o ActivityIndicator
+                                <View style={{ marginTop: 20 }}>
+                                    <ActivityIndicator size="large" color={darkTheme.textPrimary} />
+                                </View>
+                            ) : (
+                                transacoes.map((transacao, index) => (
+                                    <TransacaoItem key={index} trade={transacao}/>
+                                ))
+                            )}
+                        </View>
                     </ScrollView>
                 </View>
             </View>
@@ -204,7 +224,7 @@ const styles = StyleSheet.create({
     },
     cartoesContainer: {
         width: '100%',
-        height: '35%',
+        height: '42%',
     },
     cartoesSubContainer: {
         flexDirection: 'row',
@@ -250,8 +270,11 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
     },
     movimentacaoContainer: {
-        width: '100%',
         height: '65%',
+        marginTop: 20,
+        flexGrow: 1, 
         backgroundColor: darkTheme.backgroundPrimary,
+        marginHorizontal: 20,
     },
+
 });
