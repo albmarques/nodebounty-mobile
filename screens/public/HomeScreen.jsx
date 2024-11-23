@@ -13,8 +13,8 @@ export default function HomeScreen({ navigation }) {
           <Image source={require('../../assets/logo/Logo.png')} style={styles.logo} />
         </View>
         <View style={styles.authContainer}>
-          <StylizedButton text='ENTRAR' onPress={() => navigation.navigate('Login')}/>
-          <StylizedButton text='ABRIR UMA CONTA' onPress={() => navigation.navigate('Cadastrar')} />
+          <StylizedButton icon='login' text='ENTRAR' onPress={() => navigation.navigate('Login')} />
+          <StylizedButton icon='add-circle-outline' text='ABRIR UMA CONTA' onPress={() => navigation.navigate('Cadastrar')} />
         </View>
       </View>
     </SafeAreaView>

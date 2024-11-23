@@ -26,9 +26,9 @@ const darkTheme = {
 };
 
 const planos = {
-  tech : '#FFD700',
-  beauty: '#FF45EC',
-  health: '#FF4500',
+  tech : '#1DCFCF',
+  beauty: '#B24FF3',
+  health: '#4FF440',
 }
 
 export { lightTheme, darkTheme, planos };

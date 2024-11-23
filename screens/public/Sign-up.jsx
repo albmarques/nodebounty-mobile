@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { SafeAreaView, ScrollView, View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, Alert, StatusBar, Image } from 'react-native';
 import * as Yup from 'yup'; // Importando Yup
+
 import { api } from '../../libs/api.js';  // Two directories up to the root, then into libs/
 import { darkTheme } from '../../styles/global.js'; // Importa o tema desejado
-
 import StylizedButton from '../../components/StylizedButton.js';
 import StylizedInput from '../../components/StylizedInput.js';
 import StylizedInputMasked from '../../components/StylizedInputMasked.js';
@@ -84,6 +84,7 @@ export default function SignUpScreen({ navigation }) {
       setIsSubmitting(true);
       console.log("Realizando a requisição para cadastro...");
 
+
       // Realizando a requisição de cadastro
       const { data } = await api.post('/clientes', {
         nome,
@@ -97,6 +98,7 @@ export default function SignUpScreen({ navigation }) {
         endereco,
         numero,
       });
+      console.log(data);
 
       console.log('Cadastro realizado com sucesso:', data);
       Alert.alert('Cadastro realizado', 'Sua conta foi criada com sucesso!');
@@ -132,106 +134,130 @@ export default function SignUpScreen({ navigation }) {
         <View style={styles.authContainer}>
           <Text style={styles.title}>CADASTRO</Text>
 
-          <View style={styles.formContainer}>
-            <StylizedInput
-              icon='person'
-              placeholder='Nome completo'
-              value={nome}
-              onChangeText={setNome}
-              errors={errors.nome}
-            />
-            <StylizedInputMasked
-              icon='fingerprint'
-              placeholder='CPF'
-              value={cpf}
-              onChangeText={setCpf}
-              errors={errors.cpf}
-              maskType='cpf'
-            />
-            <StylizedInputMasked
-              icon='fingerprint'
-              placeholder='RG'
-              value={rg}
-              onChangeText={setRg}
-              errors={errors.rg}
-              maskType="custom"
-              optionsMask={{
-                mask: '99.999.999-9',
-              }}
-            />
-            <StylizedInput
-              icon='mail'
-              placeholder='E-mail'
-              value={email}
-              onChangeText={setEmail}
-              errors={errors.email}
 
-            />
-            <StylizedInputMasked
-              icon='phone'
-              placeholder='Telefone'
-              value={telefone}
-              onChangeText={setTelefone}
-              errors={errors.telefone}
-              maskType='cel-phone'
-            />
-            <StylizedInputMasked
-              icon='calendar-today'
-              placeholder='Data de nascimento'
-              value={dataNascimento}
-              onChangeText={setDataNascimento}
-              errors={errors.dataNascimento}
-              maskType='datetime'
-              optionsMask={{
-                format: 'DD/MM/YYYY',
-              }}
-            />
-            <StylizedInput
-              icon='password'
-              placeholder='Senha'
-              value={senha}
-              onChangeText={setSenha}
-              secureTextEntry={true}
-              errors={errors.senha}
-            />
-            <StylizedInput
-              icon='password'
-              placeholder='Confirmar senha'
-              value={confirmarSenha}
-              onChangeText={setConfirmarSenha}
-              secureTextEntry={true}
-              errors={errors.confirmarSenha}
-            />
-            <StylizedInputMasked
-              icon='place'
-              placeholder='CEP'
-              value={cep}
-              onChangeText={setCep}
-              errors={errors.cep}
-              maskType='custom'
-              optionsMask={{
-                mask: '99999-999',
-              }}
-            />
-            <StylizedInput
-              icon='map'
-              placeholder='Endereço'
-              value={endereco}
-              onChangeText={setEndereco}
-              errors={errors.endereco}
-            />
-            <StylizedInputMasked
-              icon='pin'
-              placeholder='Número'
-              value={numero}
-              onChangeText={setNumero}
-              errors={errors.numero}
-              maskType='only-numbers'
-            />
+          <View style={{ marginBottom: 10 }}>
+
+            <View style={styles.formContainer}>
+              <Text style={styles.containerLabel}>Dados Pessoais</Text>
+              <StylizedInput
+                icon='person'
+                placeholder='Nome completo'
+                value={nome}
+                onChangeText={setNome}
+                errors={errors.nome}
+              />
+
+              <StylizedInputMasked
+                icon='fingerprint'
+                placeholder='CPF'
+                value={cpf}
+                onChangeText={setCpf}
+                errors={errors.cpf}
+                maskType='cpf'
+              />
+
+              <StylizedInputMasked
+                icon='fingerprint'
+                placeholder='RG'
+                value={rg}
+                onChangeText={setRg}
+                errors={errors.rg}
+                maskType="custom"
+                optionsMask={{
+                  mask: '99.999.999-9',
+                }}
+              />
+
+              <StylizedInputMasked
+                icon='calendar-today'
+                placeholder='Data de nascimento'
+                value={dataNascimento}
+                onChangeText={setDataNascimento}
+                errors={errors.dataNascimento}
+                maskType='datetime'
+                optionsMask={{
+                  format: 'DD/MM/YYYY',
+                }}
+              />
+
+            </View>
+
+            <View style={styles.formContainer}>
+              <Text style={styles.containerLabel}>Contato</Text>
+              <StylizedInput
+                icon='mail'
+                placeholder='E-mail'
+                value={email}
+                onChangeText={setEmail}
+                errors={errors.email}
+
+              />
+
+              <StylizedInputMasked
+                icon='phone'
+                placeholder='Telefone'
+                value={telefone}
+                onChangeText={setTelefone}
+                errors={errors.telefone}
+                maskType='cel-phone'
+              />
+            </View>
+
+            <View style={styles.formContainer}>
+              <Text style={styles.containerLabel}>Endereço</Text>
+              <StylizedInputMasked
+                icon='place'
+                placeholder='CEP'
+                value={cep}
+                onChangeText={setCep}
+                errors={errors.cep}
+                maskType='custom'
+                optionsMask={{
+                  mask: '99999-999',
+                }}
+              />
+              <StylizedInput
+                icon='map'
+                placeholder='Endereço'
+                value={endereco}
+                onChangeText={setEndereco}
+                errors={errors.endereco}
+              />
+              <StylizedInputMasked
+                icon='pin'
+                placeholder='Número'
+                value={numero}
+                onChangeText={setNumero}
+                errors={errors.numero}
+                maskType='only-numbers'
+              />
+            </View>
+
+            <View style={styles.formContainer}>
+              <Text style={styles.containerLabel}>Senha</Text>
+              <StylizedInput
+                icon='password'
+                placeholder='Senha'
+                value={senha}
+                onChangeText={setSenha}
+                secureTextEntry={true}
+                errors={errors.senha}
+              />
+              <StylizedInput
+                icon='password'
+                placeholder='Confirmar senha'
+                value={confirmarSenha}
+                onChangeText={setConfirmarSenha}
+                secureTextEntry={true}
+                errors={errors.confirmarSenha}
+              />
+            </View>
+
           </View>
 
           <View>
             <StylizedButton
+              icon='check'
               text={
                 isSubmitting ? <ActivityIndicator color="#fff" /> : 'Criar Uma conta'
               }
@@ -243,6 +269,7 @@ export default function SignUpScreen({ navigation }) {
               }
             />
             <StylizedButton
+              icon='login'
               text='Ja tenho uma conta'
               onPress={() => navigation.navigate('Login')} />
           </View>
@@ -287,5 +314,13 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     marginVertical: 10,
+  },
+  containerLabel: {
+    color: darkTheme.textPrimary,
+    fontWeight: 'bold',
+    marginBottom: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
   },
 });

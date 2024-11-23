@@ -8,9 +8,13 @@ import { darkTheme } from "../styles/global.js";
 export default function StylizedButton({ text, onPress, icon }) {
     return (
         <TouchableHighlight onPress={onPress} style={styles.button}>
-            <View style={styles.content}>
-                <Text style={styles.text}>{text}</Text>
-                {icon && <Icon name={icon} size={20} color={darkTheme.textPrimary} style={styles.icon} />}
+            <View style={styles.container}>
+                <View>
+                    <Text style={styles.text}>{text}</Text>
+                </View>
+                <View>
+                    {icon && <Icon name={icon} size={20} color={darkTheme.textPrimary} style={styles.icon} />}
+                </View>
             </View>
         </TouchableHighlight>
     );
@@ -27,10 +31,22 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         width: Dimensions.get("window").width * 0.8,
         margin: 5,
+        alignContent: "center",
+        justifyContent: "space-around",
     },
-    content: {
-        flexGrow: 1,
+    container: {
+        width: Dimensions.get("window").width * 0.75,
         flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
+    textContainer: {
+        flexGrow: 1,
+        alignItems: "center",
+        justifyContent: "flex-start",
+        backgroundColor: '#000',
+    },
+    iconContainer: {
         alignItems: "center",
         justifyContent: "center",
     },

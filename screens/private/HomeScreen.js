@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, SafeAreaView, StyleSheet, ScrollView, StatusBar, TouchableOpacity } from 'react-native';
+import { View, Text, SafeAreaView, StyleSheet, ScrollView, StatusBar, TouchableOpacity, Image } from 'react-native';
 import { api } from '../../libs/api.js';  // Importando a instância da API
 import VisibilityBtn from '../../components/VisibityBtn';  // Componente de visibilidade
+import StylizedLoading from '../../components/StylizedLoading.js';
+import { darkTheme, planos } from '../../styles/global.js';
 
 export default function HomeScreen() {
   const [dadosConta, setDadosConta] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [visible, setVisible] = useState(false);
+  const [parceiros, setParceiros] = useState([]);
 
   const loadAccountData = useCallback(async () => {
     try {
@@ -14,6 +17,7 @@ export default function HomeScreen() {
       const response = await api.get('/conta');
       setDadosConta(response.data);
       setIsLoading(false);
+      console.log(response.data);
     } catch (error) {
       setIsLoading(false);
       alert('Erro ao carregar os dados. Tente novamente mais tarde.');
@@ -25,32 +29,43 @@ export default function HomeScreen() {
     loadAccountData();
   }, [loadAccountData]);
 
+  const ParceirosItem = ( parceiros ) => {
+    setParceiros(parceiros.split(',').map((parceiro) => parceiro.trim()));
+  };
+
+  useEffect(() => {
+    if (dadosConta) {
+      ParceirosItem(dadosConta?.plano?.parcerias);
+    }
+  }, [dadosConta]);
+
   const formatarNumero = (numero) => {
     return numero.toFixed(2).replace('.', ',');
   };
 
   if (isLoading) {
-    return <Text>Carregando...</Text>;
+    return <StylizedLoading />;
   }
 
   const toggleVisibility = () => {
     setVisible(!visible);
   };
 
+  
+
+
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar backgroundColor='#2C3336' barStyle='light-content' />
+      <StatusBar backgroundColor={darkTheme.backgroundPrimary} barStyle='light-content' />
       <ScrollView style={styles.geralContainer}>
         {/* Cabeçalho */}
         <View style={styles.cabecalhoContainer}>
           <View>
             <Text style={styles.cabecalhoContainer.text}>BEM VINDO, {dadosConta?.cliente?.nome?.split(' ')[0].toUpperCase()}</Text>
-            {/* Adicionando o número da conta */}
-            {/* <Text style={styles.cabecalhoContainer.text}>Conta: {dadosConta?.numeroConta}</Text> */}
           </View>
           <View style={styles.cabecalhoContainer.plano}>
             <Text style={styles.cabecalhoContainer.text}>PLANO </Text>
-            <Text style={styles.cabecalhoContainer.textPlano}>{dadosConta?.plano?.idPlano?.toUpperCase()}</Text>
+            <Text style={[styles.cabecalhoContainer.textPlano, dadosConta?.plano?.idPlano === 'Beauty' ? { color: planos.beauty } : dadosConta?.plano?.idPlano === 'Tech' ? { color: planos.tech } : { color: planos.health }]}>{dadosConta?.plano?.idPlano?.toUpperCase()}</Text>
           </View>
         </View>
 
@@ -90,16 +105,27 @@ export default function HomeScreen() {
 
           {/* Lista de Parceiros */}
           <View style={styles.parceirosContainer.parceiroSubContainer}>
-            {dadosConta?.plano?.parcerias?.[dadosConta?.plano?.idPlano] ? (
-              dadosConta?.plano?.parcerias?.[dadosConta?.plano?.idPlano]?.map((item) => (
-                <View key={item.conta} style={styles.parceiroItem}>
-                  <Text style={styles.parceiroItem.nome}>{item.nome}</Text>
-                  <Text style={styles.parceiroItem.conta}>Número da conta: {item.conta}</Text>
+            {parceiros.map((parceiro, index) => (
+              <View key={index} style={styles.parceiroItem}>
+                <View style={styles.parceiroLogoContainer}>
+                  <Image source={
+                    parceiro === 'Pichau' ? require('../../assets/planos/tech/Pichau.png') :
+                    parceiro === 'KaBum' ? require('../../assets/planos/tech/Kabum.png') :
+                    parceiro === 'TeraByte Shop' ? require('../../assets/planos/tech/Terabyte.png') :
+                    parceiro === 'MAC' ? require('../../assets/planos/beauty/MAC.png') :
+                    parceiro === 'MakeB' ? require('../../assets/planos/beauty/makeB.png') :
+                    parceiro === 'Vult' ? require('../../assets/planos/beauty/Vult.png') :
+                    parceiro === 'Drogasil' ? require('../../assets/planos/health/drogasil.png') :
+                    parceiro === 'Growth' ? require('../../assets/planos/health/Growth.png') :
+                    parceiro === 'OficialFarma' ? require('../../assets/planos/health/oficialfarma.png') :
+                    require('../../assets/planos/tech/Pichau.png')
+                  } style={{ width: 50, height: 50}}/>
                 </View>
-              ))
-            ) : (
-              <Text style={styles.parceirosContainer.header.subtitle}>Nenhum parceiro disponível.</Text>
-            )}
+                <View style={styles.parceiroTextContainer}>
+                  <Text style={styles.parceiroTitle}>{parceiro.toUpperCase().split(' ')[0]}</Text>
+                </View>
+              </View>
+            ))}
           </View>
         </View>
       </ScrollView>
@@ -133,7 +159,6 @@ const styles = StyleSheet.create({
     },
 
     textPlano: {
-      color: '#D904CB',
       fontSize: 14,
       fontWeight: 'bold',
     }
@@ -209,23 +234,31 @@ const styles = StyleSheet.create({
     },
 
     parceiroSubContainer: {
-      marginTop: 10,
+      marginTop: 20,
     },
   },
 
   parceiroItem: {
-    marginBottom: 15,
-  },
-
-  parceiroItem: {
     marginBottom: 10,
+    padding: 20,
+    backgroundColor: darkTheme.backgroundSecondary,
+    borderRadius: 10,
+    flexDirection: 'row',
   },
-
-  parceiroItem: {
-    marginBottom: 10,
+  parceiroTitle: {
+    color: darkTheme.textPrimary,
+    fontSize: 25,
+    fontWeight: 'bold',
   },
-
-  parceiroItem: {
-    marginBottom: 10,
+  parceiroTextContainer: {
+    paddingLeft: 15,
+    borderLeftWidth: 1,
+    borderColor: '#fff',
+    justifyContent: 'center',
   },
+  parceiroLogoContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingRight: 15,
+  }
 });

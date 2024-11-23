@@ -3,11 +3,9 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { MaterialCommunityIcons } from 'react-native-vector-icons'; // Corrigido aqui
 
-import CreditCard from '../private/CreditCard.jsx';
 import HomeScreenPrivate from '../private/HomeScreen.js';
 import Settings from '../private/Settings.jsx';
 import Plans from '../private/Plans.jsx';
-import Wallet from "../private/Wallet.jsx"
 
 
 const Tab = createBottomTabNavigator();
@@ -82,12 +80,12 @@ function RootTabs() {
             />
             <Tab.Screen
                 name="Cards"
-                component={CreditCard}
+                component={Settings}
                 options={{ title: '' }}
             />
             <Tab.Screen
                 name="Wallet"
-                component={Wallet}
+                component={Settings}
                 options={{ title: '' }}
             />
             <Tab.Screen
