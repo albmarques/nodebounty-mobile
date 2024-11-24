@@ -190,6 +190,7 @@ export default function CreditCard() {
                 </ScrollView>
                 <View style={styles.movimentacaoContainer}>
                     <Text style={styles.movimentacaoTitle}>MOVIMENTAÇÕES</Text>
+                    
                     {transacoes.length === 0 ? (
                         <View style={styles.tradesContainer}>
                             <Icon name='wind' color={darkTheme.textSecondary} size={50} type='feather' />
@@ -310,6 +311,12 @@ const styles = StyleSheet.create({
         flex: 1,
         marginBottom: 100,
         padding: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
-
+    CardContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
 });
