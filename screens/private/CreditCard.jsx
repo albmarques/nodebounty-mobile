@@ -126,6 +126,20 @@ export default function CreditCard() {
         );
     };
 
+    const refreshdata = async () => {
+        setIsProcessing(true);
+        try {
+            await consultaTransacao();
+            await consultaCartoes();
+            await loadAccountData();
+            showToast('Cartões atualizados com sucesso!');
+        } catch (error) {
+            handleApiError(error, 'Erro ao tentar atualizar os cartões');
+        } finally {
+            setIsProcessing(false);
+        }
+    };
+
     return (
         <SafeAreaView style={styles.safeArea}>
             <View style={styles.geralContainer}>
@@ -175,20 +189,30 @@ export default function CreditCard() {
                     </View>
                 </ScrollView>
                 <View style={styles.movimentacaoContainer}>
-                    <Text style={styles.cabecalhoText}>MOVIMENTAÇÕES</Text>
-                    <ScrollView>
-                        <View>
-                            {isLoading ? ( // Se estiver carregando, exibe o ActivityIndicator
-                                <View style={{ marginTop: 20 }}>
-                                    <ActivityIndicator size="large" color={darkTheme.textPrimary} />
-                                </View>
-                            ) : (
-                                transacoes.map((transacao, index) => (
-                                    <TransacaoItem key={index} trade={transacao}/>
-                                ))
-                            )}
+                    <Text style={styles.movimentacaoTitle}>MOVIMENTAÇÕES</Text>
+                    {transacoes.length === 0 ? (
+                        <View style={styles.tradesContainer}>
+                            <Icon name='wind' color={darkTheme.textSecondary} size={50} type='feather' />
+                            <Text style={{ color: darkTheme.textSecondary, textAlign: 'center', marginTop: 10 }}>Meio vazio por aqui...</Text>
                         </View>
-                    </ScrollView>
+                        // Se não houver movimentações, exibe a mensagem
+                    ) : (
+                        <ScrollView styles={styles.trades} >
+                            <View style={styles.tradesContainer} >
+                                {isLoading ? ( // Se estiver carregando, exibe o ActivityIndicator
+                                    <View style={{ marginTop: 20 }}>
+                                        <ActivityIndicator size="large" color={darkTheme.textPrimary} />
+                                    </View>
+                                ) : (
+                                    transacoes.map((transacao, index) => (
+                                        <TransacaoItem key={index} trade={transacao} />
+                                    ))
+                                )}
+                            </View>
+                        </ScrollView>
+                    )
+                    }
+
                 </View>
             </View>
         </SafeAreaView>
@@ -269,12 +293,23 @@ const styles = StyleSheet.create({
         width: 30,
         resizeMode: 'contain',
     },
+    movimentacaoTitle: {
+        color: darkTheme.textPrimary,
+        fontSize: 15,
+        marginBottom: 20,
+    },
     movimentacaoContainer: {
         height: '65%',
         marginTop: 20,
-        flexGrow: 1, 
-        backgroundColor: darkTheme.backgroundPrimary,
+        flexGrow: 1,
         marginHorizontal: 20,
+    },
+    tradesContainer: {
+        borderRadius: 10,
+        backgroundColor: darkTheme.backgroundSecondary,
+        flex: 1,
+        marginBottom: 100,
+        padding: 10,
     },
 
 });

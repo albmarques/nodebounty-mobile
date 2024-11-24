@@ -42,9 +42,7 @@ export default function TransacaoItem({ trade }) {
 
     return (
         <View style={styles.container}>
-            <Icon name={icon} size={30} type="material-community" color={
-                tradeType === "Transferência" ? "#fff" : tradeType === "Saque" ? "red" : "green"
-            } />
+            <Icon name={icon} size={30} type="material-community" color={'white'} />
             <View style={styles.textContainer}>
                 <Text style={styles.Title}>{tradeType}</Text>
                 <Text style={styles.dataText}>{formatarData(trade.transacao.dataTransacao)}</Text>
@@ -68,11 +66,11 @@ const styles = StyleSheet.create({
     },
     Title: {
         fontSize: 16,
-        color: darkTheme.textSecondary,
+        color: darkTheme.textPrimary,
     },
     Value: {
         fontSize: 16,
-        color: darkTheme.textPrimary,
+        color: darkTheme.textSecondary,
     },
     dataText: {
         fontSize: 12,
