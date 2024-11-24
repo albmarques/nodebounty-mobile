@@ -28,15 +28,21 @@ export function UnitExtract({ data, owner }) {
   };
 
   const formatarValorSignal = (number) => {
+    if (!number) return { value: formatarValor(0), style: styles.valor };
+
     const valorFormatado = formatarValor(number);
     if (data?.transacao?.emissor === null || data?.transacao?.receptor?.cliente?.idCliente === owner) {
       return { value: `+${valorFormatado}`, style: styles.valorGreen };
     } else if (data?.transacao?.receptor === null || data?.transacao?.emissor?.cliente?.idCliente === owner) {
       return { value: `-${valorFormatado}`, style: styles.valorRed };
     }
+
+    return { value: valorFormatado, style: styles.valor };
   };
 
   const getTransactionIcon = () => {
+    if (!data || !data.transacao) return null;
+
     if (data.transacao.emissor === null) {
       return <Icon name="bank-plus" size={30} color="#34A853" />;
     } else if (data.transacao.receptor === null) {
@@ -45,6 +51,28 @@ export function UnitExtract({ data, owner }) {
       return <Icon name="bank-transfer" size={30} color="#4285F4" />;
     }
   };
+
+  const getDescription = () => {
+    if (!data || !data.transacao) return 'Descrição indisponível';
+
+    if (data.transacao.emissor === null) return `Depósito`;
+    if (data.transacao.receptor === null) return 'Saque';
+    if (data.transacao.emissor?.cliente?.idCliente === owner) {
+      return `enviada para ${data.transacao.receptor?.cliente?.nome}`;
+    }
+    if (data.transacao.receptor?.cliente?.idCliente === owner) {
+      return `recebida de ${data.transacao.emissor?.cliente?.nome}`;
+    }
+    return 'Transferência';
+  };
+
+  if (!data || !data.transacao) {
+    return (
+      <View style={styles.transacaoContainer}>
+        <Text style={styles.descricaoTexto}>Dados da transação indisponíveis</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.transacaoContainer}>
@@ -60,24 +88,13 @@ export function UnitExtract({ data, owner }) {
         {/* Descrição e Valor */}
         <View style={styles.box}>
           {getTransactionIcon()}
-          <Text style={styles.descricaoTexto}>
-            {data.transacao.emissor === null
-              ? `Depósito`
-              : data.transacao.receptor === null
-              ? 'Saque'
-              : 'Transferência'}
-            {data.transacao.emissor && data.transacao.receptor && (
-              <>
-                {data.transacao.emissor.cliente.idCliente === owner && (
-                  <> enviada para {data.transacao.receptor.cliente.nome}</>
-                )}
-                {data.transacao.receptor.cliente.idCliente === owner && (
-                  <> recebida de {data.transacao.emissor.cliente.nome}</>
-                )}
-              </>
-            )}
-          </Text>
-          <Text style={[styles.valor, formatarValorSignal(data.transacao.valorTransacao).style]}>
+          <Text style={styles.descricaoTexto}>{getDescription()}</Text>
+          <Text
+            style={[
+              styles.valor,
+              formatarValorSignal(data.transacao.valorTransacao).style,
+            ]}
+          >
             {formatarValorSignal(data.transacao.valorTransacao).value}
           </Text>
         </View>

@@ -1,95 +1,154 @@
+// CreditCardItem.js
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Button, StyleSheet } from 'react-native';
-export const CreditCardItem = ({ numeroCartao, validadeCartao, cvcCartao, color = 'blue' }) =>{
-  const [isMasked, setIsMasked] = useState(true);
+import { View, Text, TouchableHighlight, StyleSheet, Image, ImageBackground, Dimensions } from 'react-native';
 
-  const handleMaskToggle = () => {
-    setIsMasked(!isMasked);
-  };
+import { darkTheme, planos } from '../styles/global.js';
+import { Header, Icon } from '@rneui/base';
+import VisibilityBtn from './VisibityBtn.js';
 
-  const formatCardNumber = (numeroCartao) => {
-    return numeroCartao.replace(/(\d{4})/g, '$1 '); // Formata o número do cartão
-  };
+const { width } = Dimensions.get('window');
 
-  const maskCardNumber = (numeroCartao) => {
-    return isMasked ? '•••• •••• •••• ' + numeroCartao.slice(-4) : formatCardNumber(numeroCartao); // Máscara/Desmascara número do cartão
-  };
+function formatCardNumber(number) {
+    return number.replace(/(\d{4})(?=\d)/g, '$1 ');
+}
 
-  const maskCvc = (cvcCartao) => {
-    return isMasked ? '•••' : cvcCartao; // Máscara/Desmascara CVC
-  };
+function formatExpiryDate(date) {
+    const [year, month] = date.split('-');
+    return `${month}/${year.slice(2)}`;
+}
 
-  const backgroundColor = color === 'blue' 
-    ? '#2a5298' 
-    : color === 'green' 
-    ? '#50c878' 
-    : '#3498db';
 
-  return (
-    <View style={[styles.cardContainer, { backgroundColor }]}>
-      <View style={styles.cardContent}>
-        <Text style={styles.cardNumber}>{maskCardNumber(numeroCartao)}</Text>
-        <Button 
-          title={isMasked ? "Mostrar" : "Ocultar"} 
-          onPress={handleMaskToggle}
-          color="#fff"
-        />
-      </View>
-      <View style={styles.infoContainer}>
-        <View style={styles.infoBlock}>
-          <Text style={styles.label}>Validade</Text>
-          <Text style={styles.info}>{validadeCartao}</Text>
+export default function CreditCardItem({ cartao, plano, ...rest }) {
+    const [visible, setVisible] = useState(false);
+
+    const toggleVisibility = () => {
+        setVisible(!visible);
+    };
+
+    return (
+        <View
+            key={cartao.idCartao}
+            style={[styles.CardContainer, {
+                borderColor: plano === 'Beauty' ? planos.beauty :
+                    plano === 'Tech' ? planos.tech : planos.health
+            }]}
+        >
+            <ImageBackground
+                source={plano === 'Tech' ? require('../assets/BG/TechBG.png') : plano === 'Beauty' ? require('../assets/BG/BeautyBG.png') : require('../assets/BG/HealthBG.png')}
+                style={styles.bgImage}
+            >
+                <View style={styles.CardSubContainer}>
+                    <View style={styles.CardLogoContainer}>
+                        <Image
+                            source={require('../assets/cardsLogo/Logo.png')}
+                            style={styles.bandeiras}
+                        />
+                        <VisibilityBtn visible={visible} toggleVisibility={toggleVisibility} />
+                        <Image
+                            source={require('../assets/cardsLogo/MasterCard.png')}
+                            style={styles.masterCardLogo}
+                        />
+                    </View>
+                    <View style={styles.CardTextContainer}>
+                        <View style={styles.subContainer1}>
+                            <Text style={styles.headerText}>Numero</Text>
+                            <Text style={styles.headerText}>Validade</Text>
+                        </View>
+                        <View style={styles.subContainer1}>
+                            <Text style={styles.CardText}>{visible ? formatCardNumber(cartao.numeroCartao) : '••••••• •••• •••• ••••'}</Text>
+                            <Text style={styles.CardText}>{formatExpiryDate(cartao.validadeCartao)}</Text>
+                        </View>
+                        <View style={styles.subContainer1}>
+                            <Text style={styles.headerText}>CVC</Text>
+                        </View>
+                        <View style={styles.subContainer2}>
+                            <Text style={styles.CardText}>{visible ? cartao.cvcCartao : '•••'}</Text>
+
+                            <TouchableHighlight onPress={rest.onDelete} style={{ borderRadius: 5 }}>
+                                <View style={styles.btnContainer}>
+                                    <Text style={styles.btnText}>Deletar Cartão</Text>
+                                    <Icon name='delete' color='#fff' size={18} />
+                                </View>
+                            </TouchableHighlight>
+                        </View>
+                    </View>
+                </View>
+            </ImageBackground>
         </View>
-        <View style={styles.infoBlock}>
-          <Text style={styles.label}>CVV</Text>
-          <Text style={styles.info}>{maskCvc(cvcCartao)}</Text>
-        </View>
-      </View>
-    </View>
-  );
+    )
 }
 
 const styles = StyleSheet.create({
-  cardContainer: {
-    width: '90%',
-    height: 200,
-    borderRadius: 15,
-    padding: 20,
-    justifyContent: 'space-between',
-    marginVertical: 10,
-    alignSelf: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-    elevation: 5,
-  },
-  cardContent: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  cardNumber: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#fff',
-    letterSpacing: 2,
-  },
-  infoContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 20,
-  },
-  infoBlock: {
-    alignItems: 'flex-start',
-  },
-  label: {
-    fontSize: 14,
-    color: '#ddd',
-  },
-  info: {
-    fontSize: 18,
-    color: '#fff',
-    fontWeight: 'bold',
-  },
+    CardContainer: {
+        backgroundColor: darkTheme.backgroundSecondary,
+        margin: 10,
+        borderRadius: 10,
+        borderWidth: 0.6,
+        borderColor: darkTheme.textPrimary,
+        flex: 1,
+        width: width * 0.94,
+    },
+    newCardSubContainer: {
+        alignItems: 'center',
+    },
+    CardLogoContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        width: '100%',
+    },
+    CardTextContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingTop: 40,
+    },
+    CardText: {
+        color: darkTheme.textPrimary,
+        fontSize: 16,
+        fontWeight: '300',
+    },
+    bandeiras: {
+        height: 30,
+        width: 50,
+        resizeMode: 'contain',
+    },
+    masterCardLogo: {
+        height: 20,
+        width: 30,
+        resizeMode: 'contain',
+    },
+    headerText: {
+        color: darkTheme.textSecondary,
+        fontSize: 12,
+    },
+    subContainer1: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
+    },
+    subContainer2: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
+    },
+    btnContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 5,
+        borderRadius: 10,
+        gap: 5,
+    },
+    btnText: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        color: darkTheme.textPrimary,
+        fontSize: 12,
+    },
+    bgImage: {
+        borderRadius: 10,
+        padding: 10,
+        width: width * 0.94,
+        flex: 1,
+    },
 });

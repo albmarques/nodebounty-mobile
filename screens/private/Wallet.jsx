@@ -1,50 +1,108 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { darkTheme } from '../../styles/global.js'; // Importa o tema desejado
+import React, { useState, useCallback, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, RefreshControl } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+
+import { api } from '../../libs/api.js';
+import { darkTheme, planos } from '../../styles/global.js'; // Importa o tema desejado
 import StylizedButton from '../../components/StylizedButton';
 import { Deposit } from '../../components/Depositar.jsx';
 import { Withdraw } from '../../components/Withdraw.jsx';
 import { Transfer } from '../../components/Transfer.jsx';
 import { Extract } from '../../components/Extract.jsx';
-import { ScrollView } from 'react-native-gesture-handler';
+import StylizedLoading from '../../components/StylizedLoading';
+import VisibilityBtn from '../../components/VisibityBtn';
 
 export default function WalletScreen() {
   const [activeComponent, setActiveComponent] = useState('DEPOSITAR'); // Define o estado inicial
+  const [dadosConta, setDadosConta] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [visible, setVisible] = useState(false);
+
+  const loadAccountData = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const response = await api.get('/conta');
+      setDadosConta(response.data);
+      console.log(response.data);
+    } catch (error) {
+      alert('Erro ao carregar os dados. Tente novamente mais tarde.');
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadAccountData();
+  }, [loadAccountData]);
+
+  const formatarNumero = (numero) => {
+    return numero.toFixed(2).replace('.', ',');
+  };
+
+  if (isLoading) {
+    return <StylizedLoading />;
+  }
+
+  const toggleVisibility = () => {
+    setVisible(!visible);
+  };
 
   const renderComponent = () => {
     switch (activeComponent) {
       case 'DEPOSITAR':
-        return <Deposit/>;
+        return <Deposit />;
       case 'SACAR':
-        return <Withdraw/>;
+        return <Withdraw />;
       case 'TRANSFERIR':
-        return <Transfer/>;
+        return <Transfer />;
       case 'EXTRATO':
-        return <Extract/>;
-        
+        return <Extract />;
+
       default:
         return <Text style={styles.operationText}>Escolha uma opção</Text>;
     }
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>MINHA CARTEIRA</Text>
-        <Text style={styles.plan}>PLANO TECH</Text>
+    <View refreshControl={
+      <RefreshControl refreshing={isLoading} onRefresh={loadAccountData}
+      />
+    } style={styles.container}>
+
+      <View style={styles.cabecalhoContainer}>
+        <View>
+          <Text style={styles.cabecalhoContainer.text}>BEM VINDO, {dadosConta?.cliente?.nome?.split(' ')[0].toUpperCase()}</Text>
+        </View>
+        <View style={styles.cabecalhoContainer.plano}>
+          <Text style={styles.cabecalhoContainer.text}>PLANO </Text>
+          <Text style={[styles.cabecalhoContainer.textPlano, dadosConta?.plano?.idPlano === 'Beauty' ? { color: planos.beauty } : dadosConta?.plano?.idPlano === 'Tech' ? { color: planos.tech } : { color: planos.health }]}>{dadosConta?.plano?.idPlano?.toUpperCase()}</Text>
+        </View>
       </View>
 
-      <View style={styles.balanceContainer}>
-        <Text style={styles.balanceLabel}>SALDO EM CONTA</Text>
-        <View style={styles.balanceValueContainer}>
-          <Text style={styles.balanceValue}>R$ 123.456,99</Text>
-          <TouchableOpacity style={styles.eyeIcon}  >
-            <Text style={styles.eyeText}>👁️</Text>
-          </TouchableOpacity>
+      <View style={styles.saldoContainer}>
+        <View style={styles.saldoContainer.header}>
+          <View>
+            <Text style={styles.saldoContainer.header.text}>SALDO EM CONTA</Text>
+          </View>
+          <View style={styles.saldoContainer.header.btnExtrato}>
+            <Text style={styles.saldoContainer.header.text}  onPress={() => setActiveComponent('EXTRATO')} >VER EXTRATO </Text>
+          </View>
         </View>
-        <TouchableOpacity onPress={() => setActiveComponent('EXTRATO')}>
-          <Text style={styles.extractText}>VER EXTRATO</Text>
-        </TouchableOpacity>
+
+        <View style={styles.saldoContainer.saldo}>
+          <View>
+            <View style={styles.saldoContainer.saldo.containerValor}>
+              <Text style={styles.saldoContainer.saldo.containerValor.R$}>R$</Text>
+              <Text style={styles.saldoContainer.saldo.containerValor.valor}>
+                {visible ? formatarNumero(dadosConta?.saldoConta) : '••••'}
+              </Text>
+            </View>
+          </View>
+          <View>
+            <VisibilityBtn visible={visible} toggleVisibility={toggleVisibility} />
+          </View>
+        </View>
       </View>
 
       {/* Aqui o texto renderizado de acordo com o botão pressionado */}
@@ -82,6 +140,80 @@ const styles = StyleSheet.create({
     backgroundColor: darkTheme.backgroundPrimary,
     padding: 20,
   },
+
+  cabecalhoContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+
+    plano: {
+      flexDirection: 'row',
+    },
+
+    text: {
+      color: '#fff',
+      fontSize: 14,
+    },
+
+    textPlano: {
+      fontSize: 14,
+      fontWeight: 'bold',
+    }
+  },
+
+  saldoContainer: {
+    marginTop: 20,
+    padding: 20,
+    backgroundColor: '#252A2D',
+    borderRadius: 10,
+
+    header: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+
+      text: {
+        color: '#fff',
+        fontSize: 10,
+        fontWeight: 'bold',
+      },
+
+      btnExtrato: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+      }
+    },
+
+    saldo: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+
+      containerValor: {
+        flexDirection: 'row',
+        gap: 5,
+
+        valor: {
+          color: '#fff',
+          fontSize: 35,
+          fontWeight: 'thin',
+        },
+
+        R$: {
+          marginTop: 8,
+          color: '#A6A6A6',
+          fontSize: 15,
+          fontWeight: 'thin',
+        },
+
+        visibility: {
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+      },
+    },
+  },
+
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -140,7 +272,7 @@ const styles = StyleSheet.create({
   operationButton: {
     backgroundColor: '#444',
     paddingVertical: 15,
-    paddingHorizontal:15,
+    paddingHorizontal: 15,
     borderRadius: 10,
     flex: 1,
     alignItems: 'center',

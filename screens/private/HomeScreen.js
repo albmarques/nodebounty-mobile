@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, SafeAreaView, StyleSheet, ScrollView, StatusBar, TouchableOpacity, Image } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';  // Importando o useFocusEffect
+import { View, Text, SafeAreaView, StyleSheet, StatusBar, TouchableOpacity, Image, RefreshControl } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import { api } from '../../libs/api.js';  // Importando a instância da API
 import VisibilityBtn from '../../components/VisibityBtn';  // Componente de visibilidade
 import StylizedLoading from '../../components/StylizedLoading.js';
@@ -26,13 +26,11 @@ export default function HomeScreen() {
     }
   }, []);
 
-  useFocusEffect(
-    useCallback(() => {
-      loadAccountData();
-    }, [loadAccountData])
-  );
+  useEffect(() => {
+    loadAccountData();
+  }, [loadAccountData]);
 
-  const ParceirosItem = (parceiros) => {
+  const ParceirosItem = ( parceiros ) => {
     setParceiros(parceiros.split(',').map((parceiro) => parceiro.trim()));
   };
 
@@ -54,10 +52,18 @@ export default function HomeScreen() {
     setVisible(!visible);
   };
 
+  
+
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar backgroundColor={darkTheme.backgroundPrimary} barStyle='light-content' />
-      <ScrollView style={styles.geralContainer}>
+      <ScrollView refreshControl={
+        <RefreshControl refreshing={isLoading} onRefresh={loadAccountData}
+        />
+      }
+      scrollEventThrottle={16}
+      style={styles.geralContainer}>
         {/* Cabeçalho */}
         <View style={styles.cabecalhoContainer}>
           <View>
@@ -108,7 +114,8 @@ export default function HomeScreen() {
             {parceiros.map((parceiro, index) => (
               <View key={index} style={styles.parceiroItem}>
                 <View style={styles.parceiroLogoContainer}>
-                  <Image source={parceiro === 'Pichau' ? require('../../assets/planos/tech/Pichau.png') :
+                  <Image source={
+                    parceiro === 'Pichau' ? require('../../assets/planos/tech/Pichau.png') :
                     parceiro === 'KaBum' ? require('../../assets/planos/tech/Kabum.png') :
                     parceiro === 'TeraByte Shop' ? require('../../assets/planos/tech/Terabyte.png') :
                     parceiro === 'MAC' ? require('../../assets/planos/beauty/MAC.png') :
@@ -135,94 +142,119 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flexGrow: 1,
-    backgroundColor: '#2C3336',
+    backgroundColor: darkTheme.backgroundPrimary,
   },
+
   geralContainer: {
     marginTop: 20,
     marginHorizontal: 20,
   },
+
   cabecalhoContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+
     plano: {
       flexDirection: 'row',
     },
+
     text: {
       color: '#fff',
       fontSize: 14,
     },
+
     textPlano: {
       fontSize: 14,
       fontWeight: 'bold',
-    },
+    }
   },
+
   saldoContainer: {
     marginTop: 20,
     padding: 20,
     backgroundColor: '#252A2D',
     borderRadius: 10,
+
     header: {
       flexDirection: 'row',
       justifyContent: 'space-between',
+
       text: {
         color: '#fff',
         fontSize: 10,
         fontWeight: 'bold',
       },
+
       btnExtrato: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'flex-end',
-      },
+      }
     },
+
     saldo: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
+
       containerValor: {
         flexDirection: 'row',
         gap: 5,
+
         valor: {
           color: '#fff',
           fontSize: 35,
           fontWeight: 'thin',
         },
+
         R$: {
           marginTop: 8,
           color: '#A6A6A6',
           fontSize: 15,
           fontWeight: 'thin',
         },
+
+        visibility: {
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
       },
     },
   },
+
   parceirosContainer: {
     marginTop: 20,
+
     header: {
       title: {
         color: '#fff',
         fontSize: 14,
         fontWeight: 'bold',
       },
+
       subtitle: {
         color: '#A6A6A6',
         fontSize: 11,
       },
     },
+
     parceiroSubContainer: {
       marginTop: 20,
     },
   },
+
   parceiroItem: {
     marginBottom: 10,
     padding: 20,
-    backgroundColor: darkTheme.backgroundSecondary,
+    backgroundColor: darkTheme.backgroundPrimary,
     borderRadius: 10,
+    borderWidth: 0.6,
+    borderColor: darkTheme.textSecondary,
     flexDirection: 'row',
   },
   parceiroTitle: {
-    color: darkTheme.textPrimary,
+    color: darkTheme.textSecondary,
     fontSize: 25,
     fontWeight: 'bold',
   },
@@ -236,5 +268,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingRight: 15,
-  },
+  }
 });
