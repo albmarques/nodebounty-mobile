@@ -7,6 +7,7 @@ import HomeScreenPrivate from '../private/HomeScreen.js';
 import Settings from '../private/Settings.jsx';
 import Plans from '../private/Plans.jsx';
 import CreditCard from '../private/CreditCard.jsx';
+import Wallet from '../private/Wallet.jsx';
 
 
 const Tab = createBottomTabNavigator();
@@ -86,7 +87,7 @@ function RootTabs() {
             />
             <Tab.Screen
                 name="Wallet"
-                component={Settings}
+                component={Wallet}
                 options={{ title: '' }}
             />
             <Tab.Screen

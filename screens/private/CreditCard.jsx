@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, FlatList, StyleSheet, Alert, ActivityIndicator, ToastAndroid, Platform, SafeAreaView, ScrollView, TouchableHighlight, Image, Dimensions } from 'react-native';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { ScrollView, View, Text, FlatList, StyleSheet, Alert, ActivityIndicator, ToastAndroid, Platform, SafeAreaView, TouchableHighlight, Image, Dimensions, RefreshControl } from 'react-native';
 import { planos, darkTheme } from '../../styles/global.js';
 import { api } from '../../libs/api.js';
 import StylizedButton from '../../components/StylizedButton';
 import CreditCardItem from "../../components/CreditCardItem";
 import { Icon } from '@rneui/base';
 import TransacaoItem from '../../components/TransacaoItem.js';
+import { View as GestureHandlerView } from 'react-native-gesture-handler';
 
 function showToast(message) {
     if (Platform.OS === 'android') {
@@ -36,16 +37,15 @@ export default function CreditCard() {
     const [isProcessing, setIsProcessing] = useState(false);
     const [dadosConta, setDadosConta] = useState(null);
     const [transacoes, setTransacoes] = useState([]);
+    const [refreshing, setRefreshing] = useState(false);
+    const scrollViewRef = useRef(null);
 
     const consultaCartoes = useCallback(async () => {
-        setIsLoading(true);
         try {
             const { data } = await api.get(`/cartoes`);
             setCartoes(data);
         } catch (error) {
             handleApiError(error, 'Não foi possível carregar os cartões');
-        } finally {
-            setIsLoading(false);
         }
     }, []);
 
@@ -126,19 +126,13 @@ export default function CreditCard() {
         );
     };
 
-    const refreshdata = async () => {
-        setIsProcessing(true);
-        try {
-            await consultaTransacao();
-            await consultaCartoes();
-            await loadAccountData();
-            showToast('Cartões atualizados com sucesso!');
-        } catch (error) {
-            handleApiError(error, 'Erro ao tentar atualizar os cartões');
-        } finally {
-            setIsProcessing(false);
-        }
-    };
+    const refreshAll = useCallback(async () => {
+        setRefreshing(true);
+        await consultaCartoes();
+        await loadAccountData();
+        await consultaTransacao();
+        setRefreshing(false);
+    }, [consultaCartoes]);
 
     return (
         <SafeAreaView style={styles.safeArea}>
@@ -150,7 +144,11 @@ export default function CreditCard() {
                         <Text style={[styles.planoText, { color: planos[dadosConta?.plano?.idPlano?.toLowerCase()] }]}>{dadosConta?.plano?.idPlano?.toUpperCase()}</Text>
                     </View>
                 </View>
-                <ScrollView horizontal={true} style={styles.cartoesContainer}>
+
+                <ScrollView
+                    horizontal={true}
+                    style={styles.cartoesContainer}>
+
                     <View style={styles.cartoesSubContainer}>
                         {isLoading ? (
                             <View style={styles.CardContainer}>
@@ -189,8 +187,21 @@ export default function CreditCard() {
                     </View>
                 </ScrollView>
                 <View style={styles.movimentacaoContainer}>
-                    <Text style={styles.movimentacaoTitle}>MOVIMENTAÇÕES</Text>
-                    
+                    <View style={styles.movimentacaoheader}>
+                        <View>
+                            <Text style={styles.movimentacaoTitle}>MOVIMENTAÇÕES</Text>
+                        </View>
+                        <View style={styles.attBtnContainer}>
+                            <TouchableHighlight onPress={refreshAll}>
+                                <View style={{ flexDirection: 'row' }}>
+                                    <Text style={styles.attBtnText}>Atualizar</Text>
+                                    <Icon name='refresh' color={darkTheme.textPrimary} size={20} />
+                                </View>
+                            </TouchableHighlight>
+                        </View>
+                    </View>
+
+
                     {transacoes.length === 0 ? (
                         <View style={styles.tradesContainer}>
                             <Icon name='wind' color={darkTheme.textSecondary} size={50} type='feather' />
@@ -297,7 +308,6 @@ const styles = StyleSheet.create({
     movimentacaoTitle: {
         color: darkTheme.textPrimary,
         fontSize: 15,
-        marginBottom: 20,
     },
     movimentacaoContainer: {
         height: '65%',
@@ -318,5 +328,23 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    movimentacaoheader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+    attBtnContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    attBtnText: {
+        color: darkTheme.textPrimary,
+        fontSize: 14,
+        marginRight: 5,
+    },
+    trades: {
+        flex: 1,
     },
 });

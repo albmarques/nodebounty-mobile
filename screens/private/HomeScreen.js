@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, SafeAreaView, StyleSheet, ScrollView, StatusBar, TouchableOpacity, Image } from 'react-native';
+import { View, Text, SafeAreaView, StyleSheet, StatusBar, TouchableOpacity, Image, RefreshControl } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import { api } from '../../libs/api.js';  // Importando a instância da API
 import VisibilityBtn from '../../components/VisibityBtn';  // Componente de visibilidade
 import StylizedLoading from '../../components/StylizedLoading.js';
@@ -57,7 +58,12 @@ export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar backgroundColor={darkTheme.backgroundPrimary} barStyle='light-content' />
-      <ScrollView style={styles.geralContainer}>
+      <ScrollView refreshControl={
+        <RefreshControl refreshing={isLoading} onRefresh={loadAccountData}
+        />
+      }
+      scrollEventThrottle={16}
+      style={styles.geralContainer}>
         {/* Cabeçalho */}
         <View style={styles.cabecalhoContainer}>
           <View>
