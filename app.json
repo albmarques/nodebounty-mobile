@@ -18,10 +18,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/logo/Logo2.png",
         "backgroundColor": "#2C3336"
-      }
+      },
+      "package": "com.nodebounty.breeze"
     },
     "web": {
       "favicon": "./assets/logo/Logo2.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "77ace91e-51ab-4f9d-9ac2-93a95db39f16"
+      }
     }
   }
 }
