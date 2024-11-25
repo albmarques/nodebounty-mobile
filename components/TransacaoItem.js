@@ -10,8 +10,13 @@ export default function TransacaoItem({ trade }) {
     React.useEffect(() => {
         if (trade && trade.transacao) {
             if (trade.transacao.emissor && trade.transacao.receptor) {
-                setTradeType("Transferência");
-                setIcon("swap-horizontal");
+                if (trade.role === 'entrada') {
+                    setTradeType("Recebido de " + trade.transacao.emissor.cliente.nome.split(' ')[0]);
+                    setIcon("swap-horizontal");
+                } else {
+                    setTradeType("Enviado para " + trade.transacao.receptor.cliente.nome.split(' ')[0]);    
+                    setIcon("swap-horizontal");
+                }
             } else if (trade.role === 'saida') {
                 setTradeType("Saque");
                 setIcon("arrow-top-left-thin");

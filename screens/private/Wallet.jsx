@@ -1,19 +1,18 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, RefreshControl } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, RefreshControl, TouchableHighlight } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 
 import { api } from '../../libs/api.js';
 import { darkTheme, planos } from '../../styles/global.js'; // Importa o tema desejado
 import StylizedButton from '../../components/StylizedButton';
-import { Deposit } from '../../components/Depositar.jsx';
-import { Withdraw } from '../../components/Withdraw.jsx';
-import { Transfer } from '../../components/Transfer.jsx';
-import { Extract } from '../../components/Extract.jsx';
 import StylizedLoading from '../../components/StylizedLoading';
 import VisibilityBtn from '../../components/VisibityBtn';
+import { Icon } from '@rneui/base';
+import { Dimensions } from 'react-native';
 
-export default function WalletScreen() {
-  const [activeComponent, setActiveComponent] = useState('DEPOSITAR'); // Define o estado inicial
+const width = Dimensions.get('window').width;
+
+export default function WalletScreen({ navigation }) {
   const [dadosConta, setDadosConta] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [visible, setVisible] = useState(false);
@@ -48,24 +47,8 @@ export default function WalletScreen() {
     setVisible(!visible);
   };
 
-  const renderComponent = () => {
-    switch (activeComponent) {
-      case 'DEPOSITAR':
-        return <Deposit />;
-      case 'SACAR':
-        return <Withdraw />;
-      case 'TRANSFERIR':
-        return <Transfer />;
-      case 'EXTRATO':
-        return <Extract />;
-
-      default:
-        return <Text style={styles.operationText}>Escolha uma opção</Text>;
-    }
-  };
-
   return (
-    <View refreshControl={
+    <ScrollView refreshControl={
       <RefreshControl refreshing={isLoading} onRefresh={loadAccountData}
       />
     } style={styles.container}>
@@ -86,7 +69,7 @@ export default function WalletScreen() {
             <Text style={styles.saldoContainer.header.text}>SALDO EM CONTA</Text>
           </View>
           <View style={styles.saldoContainer.header.btnExtrato}>
-            <Text style={styles.saldoContainer.header.text}  onPress={() => setActiveComponent('EXTRATO')} >VER EXTRATO </Text>
+            <Text style={styles.saldoContainer.header.text} onPress={() => setActiveComponent('EXTRATO')} >VER EXTRATO </Text>
           </View>
         </View>
 
@@ -107,30 +90,37 @@ export default function WalletScreen() {
 
       {/* Aqui o texto renderizado de acordo com o botão pressionado */}
       <View style={styles.operationsContainer}>
-        {renderComponent()}
+        <Text style={styles.operationTitle}>OPERAÇÕES</Text>
+
+        <View style={styles.operationsSubContainer}>
+
+          <TouchableHighlight style={styles.operationBtnContainer} onPress={() => navigation.navigate('Deposito')}>
+            <View style={styles.operationBtn}>
+              <Icon name="arrow-bottom-right-thin" size={30} type="material-community" color={darkTheme.textSecondary} />
+              <Text style={styles.operationBtnText}>Depositar</Text>
+            </View>
+          </TouchableHighlight>
+
+          <TouchableHighlight style={styles.operationBtnContainer} onPress={() => navigation.navigate('Saque')}>
+            <View style={styles.operationBtn}>
+              <Icon name="arrow-top-left-thin" size={30} type="material-community" color={darkTheme.textSecondary} />
+              <Text style={styles.operationBtnText}>Sacar</Text>
+            </View>
+          </TouchableHighlight>
+
+          <TouchableHighlight style={styles.operationBtnContainer} onPress={() => navigation.navigate('Transfer', {
+            Conta: ""
+          })}>
+            <View style={styles.operationBtn}>
+              <Icon name="swap-horizontal" size={30} type="material-community" color={darkTheme.textSecondary} />
+              <Text style={styles.operationBtnText}>Trasnferir</Text>
+            </View>
+          </TouchableHighlight>
+
+        </View>
       </View>
 
-      <View style={styles.operationsContainer}>
-        <TouchableOpacity
-          style={styles.operationButton}
-          onPress={() => setActiveComponent('DEPOSITAR')}
-        >
-          <Text style={styles.operationText}>DEPOSITAR</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.operationButton}
-          onPress={() => setActiveComponent('SACAR')}
-        >
-          <Text style={styles.operationText}>SACAR</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.operationButton}
-          onPress={() => setActiveComponent('TRANSFERIR')}
-        >
-          <Text style={styles.operationText}>TRANSFERIR</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -214,72 +204,39 @@ const styles = StyleSheet.create({
     },
   },
 
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  title: {
-    fontSize: 24,
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  plan: {
-    fontSize: 18,
-    color: darkTheme.primary,
-    fontWeight: 'bold',
-  },
-  balanceContainer: {
-    backgroundColor: '#1C1F2A',
-    borderRadius: 10,
-    padding: 20,
-    marginBottom: 20,
-  },
-  balanceLabel: {
-    fontSize: 16,
-    color: '#888',
-  },
-  balanceValueContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginVertical: 10,
-  },
-  balanceValue: {
-    fontSize: 32,
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  eyeIcon: {
-    backgroundColor: '#444',
-    borderRadius: 20,
-    padding: 10,
-  },
-  eyeText: {
-    fontSize: 18,
-    color: '#fff',
-  },
-  extractText: {
-    fontSize: 16,
-    color: '#00B0FF',
-    textAlign: 'right',
-  },
   operationsContainer: {
+    marginTop: 20,
+  },
+  operationTitle: {
+    color: '#fff',
+    fontSize: 15,
+  },
+  operationsSubContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  operationButton: {
-    backgroundColor: '#444',
-    paddingVertical: 15,
-    paddingHorizontal: 15,
+    marginTop: 10,
+    backgroundColor: darkTheme.backgroundSecondary,
+    padding: 10,
     borderRadius: 10,
-    flex: 1,
+
+  },
+
+  operationBtnContainer: {
+    borderRadius: 10,
     alignItems: 'center',
   },
-  operationText: {
-    color: '#fff',
-    fontSize: 10,
-    fontWeight: 'bold',
+
+  operationBtn: {
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: darkTheme.textSecondary,
+    width: width * 0.26,
+    height: width * 0.26,
+  },
+  operationBtnText: {
+    color: darkTheme.textSecondary,
+    fontSize: 12,
   },
 });

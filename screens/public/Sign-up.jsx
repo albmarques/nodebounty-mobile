@@ -154,6 +154,7 @@ export default function SignUpScreen({ navigation }) {
                 onChangeText={setCpf}
                 errors={errors.cpf}
                 maskType='cpf'
+                keyboardType='numeric'
               />
 
               <StylizedInputMasked
@@ -166,6 +167,7 @@ export default function SignUpScreen({ navigation }) {
                 optionsMask={{
                   mask: '99.999.999-9',
                 }}
+                keyboardType='numeric'
               />
 
               <StylizedInputMasked
@@ -178,6 +180,7 @@ export default function SignUpScreen({ navigation }) {
                 optionsMask={{
                   format: 'DD/MM/YYYY',
                 }}
+                keyboardType='numeric'
               />
 
             </View>
@@ -200,6 +203,7 @@ export default function SignUpScreen({ navigation }) {
                 onChangeText={setTelefone}
                 errors={errors.telefone}
                 maskType='cel-phone'
+                keyboardType='numeric'
               />
             </View>
 
@@ -215,6 +219,7 @@ export default function SignUpScreen({ navigation }) {
                 optionsMask={{
                   mask: '99999-999',
                 }}
+                keyboardType='numeric'
               />
               <StylizedInput
                 icon='map'
@@ -229,7 +234,9 @@ export default function SignUpScreen({ navigation }) {
                 value={numero}
                 onChangeText={setNumero}
                 errors={errors.numero}
-                maskType='only-numbers'
+                keyboardType='numeric'
+                maskType={'custom'}
+                maxLength={5}
               />
             </View>
 
